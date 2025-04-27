@@ -106,6 +106,10 @@ const Users = () => {
             <label>IP:</label>
             <div className='font-[500]'>{row?.registerIp}</div>
           </div>
+          <div className='flex gap-2'>
+            <label>DeviceId:</label>
+            <div className='font-[500]'>{row?.uuid}</div>
+          </div>
         </div>
       )
     },
