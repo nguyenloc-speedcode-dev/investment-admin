@@ -2,6 +2,8 @@ import { API_URL } from '../utils';
 
 export const apiRoutes = {
   login: `${API_URL}/auth/admin`,
+  dataUsers: `${API_URL}/admin/data-users`,
+  dataTickets: `${API_URL}/admin/data-tickets`,
   getAdmin: `${API_URL}/admin`,
   getConfigs: `${API_URL}/admin/configs`,
   transaction: `${API_URL}/admin/transactions`,

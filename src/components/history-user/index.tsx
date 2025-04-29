@@ -7,7 +7,7 @@ import {
   ProDescriptions,
 } from '@ant-design/pro-components';
 import { Avatar, BreadcrumbProps, Modal, Space, Tag } from 'antd';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
@@ -49,6 +49,7 @@ const breadcrumb: BreadcrumbProps = {
 const HistoryUser = () => {
   const actionRef = useRef<ActionType>();
   const [modal, modalContextHolder] = Modal.useModal();
+  const [data, setData] = useState<any>()
 
   const columns: ProColumns[] = [
     {
@@ -57,7 +58,7 @@ const HistoryUser = () => {
       align: 'center',
       sorter: false,
       render: (userId, row: any) => (
-      <div className='flex flex-col gap-1'>
+        <div className='flex flex-col gap-1'>
           <div className='flex gap-2'>
             <label>ID GD:</label>
             <div className='font-[700]'>{row?._id}</div>
@@ -163,7 +164,19 @@ const HistoryUser = () => {
               </div>
               <div className='flex gap-2'>
                 <label>Biến động :</label>
-                <div>{row?.currentBalanceUser}$</div>
+                <div>{row?.currentBalanceUser || "-"}$</div>
+              </div>
+              <div className='flex gap-2'>
+                <label>Số lần checkin :</label>
+                <div>{row?.user?.checkInToday}</div>
+              </div>
+              <div className='flex gap-2'>
+                <label>Số lần lần tìm kho báu :</label>
+                <div>{row?.user?.mineNum}</div>
+              </div>
+              <div className='flex gap-2'>
+                <label>Số ticket :</label>
+                <div>{row?.user?.duckSticker}</div>
               </div>
             </div>
           )
@@ -181,6 +194,7 @@ const HistoryUser = () => {
         { text: 'Nạp tiền', value: 'deposit' },
         { text: 'Điểm danh', value: 'checkin' },
         { text: 'Vòng quay', value: 'reward_draw' },
+        { text: 'Kho báu', value: 'reward_mine' },
       ],
       align: 'center',
       sorter: false,
@@ -190,16 +204,19 @@ const HistoryUser = () => {
             row?.transaction_type === 'reward_refferal' && <Tag color='cyan'>Thưởng giới thiệu</Tag>
           }
           {
-            row?.transaction_type === 'withdraw' && <Tag color='blue'>Rút tiền</Tag>
+            row?.transaction_type === 'withdraw' && <Tag color='red-inverse'>Rút tiền</Tag>
           }
           {
-            row?.transaction_type === 'deposit' && <Tag color='geekblue'>Nạp tiền</Tag>
+            row?.transaction_type === 'deposit' && <Tag color='geekblue-inverse'>Nạp tiền</Tag>
           }
           {
             row?.transaction_type === 'checkin' && <Tag color='gold'>Điểm danh</Tag>
           }
           {
             row?.transaction_type === 'reward_draw' && <Tag color='gold'>Vòng quay may mắn</Tag>
+          }
+          {
+            row?.transaction_type === 'reward_mine' && <Tag color='gold'>Đi tìm kho báu</Tag>
           }
         </div>
       )
@@ -234,15 +251,48 @@ const HistoryUser = () => {
       dataIndex: '_id',
       align: 'center',
       sorter: false,
-      render: (userId, row: any) => (
-        <div>
+      render: (userId, row: any) => {
+        if (row?.note === "Lucky_Clover" ||
+          row?.note === "Robot_Part" ||
+          row?.note === "x1_duck" ||
+          row?.note === "x2_duck" ||
+          row?.note === "x5_duck"
+        )
+          return (
+            <div>
+              {row?.note === "Lucky_Clover" && "Chúc may mắn"}
+              {row?.note === "Robot_Part" && "+2 lượt"}
+              {row?.note === "x1_duck" && "+1 mảnh vịt"}
+              {row?.note === "x2_duck" && "+2 mảnh vịt"}
+              {row?.note === "x5_duck" && "+5 mảnh vịt"}
+            </div>
+          )
+        return <>
           {row?.note}
-        </div>
-      )
+        </>
+      }
+
+
     },
 
 
   ];
+
+  const getData = async () => {
+    try {
+      const res = await http.get(apiRoutes.dataUsers)
+      if (res && res.data) {
+        setData(res.data?.data)
+      }
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
 
   const handleActionOnSelect = (key: string, transaction: any) => {
     showConfirmation(key, transaction);
@@ -280,6 +330,64 @@ const HistoryUser = () => {
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
+      <div className='grid grid-cols-4 '>
+        <div className='my-4'>
+          <div className='flex gap-2 items-center'>
+            Tổng tiền nạp:
+            <div className='font-[900]'>
+              {data?.totalDepositAllTime?.toLocaleString()}$
+            </div>
+          </div>
+          <div className='flex gap-2 items-center'>
+            Tổng tiền rút:
+            <div className='font-[900]'>
+              {data?.totalWithdrawAllTime?.toLocaleString()}$
+            </div>
+          </div>
+        </div>
+        <div className='my-4'>
+          <div className='flex gap-2 items-center'>
+            Tổng tiền nạp hôm nay:
+            <div className='font-[900]'>
+              {data?.totalDepositToday?.toLocaleString()}$
+            </div>
+          </div>
+          <div className='flex gap-2 items-center'>
+            Tổng tiền rút hôm nay:
+            <div className='font-[900]'>
+              {data?.totalWithdrawToday?.toLocaleString()}$
+            </div>
+          </div>
+        </div>
+        <div className='my-4'>
+          <div className='flex gap-2 items-center'>
+            Sô lần nạp hôm nay:
+            <div className='font-[900]'>
+              {data?.countDepositToday?.toLocaleString()}
+            </div>
+          </div>
+          <div className='flex gap-2 items-center'>
+            Tổng lần rút hôm nay
+            <div className='font-[900]'>
+              {data?.countWithdrawToday?.toLocaleString()}
+            </div>
+          </div>
+        </div>
+        <div className='my-4'>
+          <div className='flex gap-2 items-center'>
+            Tổng Số lần nạp:
+            <div className='font-[900]'>
+              {data?.countDepositAllTime?.toLocaleString()}
+            </div>
+          </div>
+          <div className='flex gap-2 items-center'>
+            Tổng số lần rút :
+            <div className='font-[900]'>
+              {data?.countWithdrawAllTime?.toLocaleString()}
+            </div>
+          </div>
+        </div>
+      </div>
       <ProTable
         columns={columns}
         cardBordered={false}

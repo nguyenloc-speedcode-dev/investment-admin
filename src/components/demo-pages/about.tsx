@@ -1,4 +1,4 @@
-import { BreadcrumbProps, message, Spin, Switch } from 'antd';
+import { BreadcrumbProps, Button, Form, Input, message, Spin, Switch } from 'antd';
 import BasePageContainer from '../layout/PageContainer';
 import { webRoutes } from '../../routes/web';
 import { Link } from 'react-router-dom';
@@ -58,9 +58,13 @@ const Setting = () => {
   useEffect(() => {
     getConfigs()
   }, [callBack])
+
+  const paymentGateway = config?.PAYMENT_GATEWAY ? JSON.parse(config?.PAYMENT_GATEWAY + "") : {};
+
+
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
-      
+
       <div className="m-5">
         <article>
 
@@ -72,25 +76,60 @@ const Setting = () => {
             <div className="my-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="group relative rounded-xl border border-slate-200 p-4">
                 <div className='my-2'>
-                  <h1>Cài đặt Maintenance</h1>
+                  <h1 className='my-2 font-[500]'>Cài đặt thanh toán</h1>
                   <div className='flex gap-2 items-center mb-3'>
-                    <div>Nạp :</div>
+                    <div>Bật/Tắt Nạp :</div>
                     <div>
                       <Switch checked={config?.PAYMENT_MAINTENANCE_DEPOSIT === '0'} onChange={async (checked: boolean) => {
                         handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT", checked ? "0" : "1")
                       }} /></div>
                   </div>
                   <div className='flex gap-2 items-center mb-3'>
-                    <div>Rút :</div>
+                    <div>Bật/Tắt Rút :</div>
                     <div><Switch checked={config?.PAYMENT_MAINTENANCE_WITHDRAW === '0'} onChange={async (checked: boolean) => {
                       handleUpdateConfig("PAYMENT_MAINTENANCE_WITHDRAW", checked ? "0" : "1")
+                    }} /></div>
+                  </div>
+                  <div className='flex gap-2 items-center mb-3'>
+                    <div>Bật/Tắt Nạp Banking :</div>
+                    <div><Switch checked={config?.PAYMENT_MAINTENANCE_DEPOSIT_BANKING === '0'} onChange={async (checked: boolean) => {
+                      handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT_BANKING", checked ? "0" : "1")
                     }} /></div>
                   </div>
                 </div>
               </div>
               <div className="group relative rounded-xl border border-slate-200 p-4">
-                212
+                <h1 className='my-2 font-[500]'>Cài đặt tài khoản thanh toán banking</h1>
 
+                <div>
+                  Tên Chủ Thẻ :  {paymentGateway?.holderName}
+                </div>
+                <div>
+                  STK :  {paymentGateway?.numberBank}
+                </div>
+                <div >
+                  Tên ngân hàng :  {paymentGateway?.nameBank}
+                </div>
+
+                <Form className='mt-5' onFinish={async (form) => {
+                  handleUpdateConfig("PAYMENT_GATEWAY", JSON.stringify(form))
+                }}>
+                  <Form.Item name="holderName" >
+                    <Input placeholder='Tên chủ thẻ' />
+                  </Form.Item>
+                  <Form.Item name="nameBank" >
+                    <Input placeholder='Tên ngân hàng' />
+                  </Form.Item>
+                  <Form.Item name="numberBank" >
+                    <Input placeholder='Số tài khoản' />
+                  </Form.Item>
+                  <Form.Item name="code" >
+                    <Input placeholder='Code ngân hàng' />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button htmlType='submit'>Thay đổi</Button>
+                  </Form.Item>
+                </Form>
               </div>
 
             </div>

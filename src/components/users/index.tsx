@@ -6,8 +6,8 @@ import {
   TableDropdown,
   ProDescriptions,
 } from '@ant-design/pro-components';
-import { Avatar, BreadcrumbProps, Modal, Space } from 'antd';
-import { useRef } from 'react';
+import { Avatar, BreadcrumbProps, Button, Dropdown, Menu, Modal, Select, Space } from 'antd';
+import { useRef, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
@@ -27,6 +27,8 @@ import Icon, {
   DeleteOutlined,
   UserOutlined,
   WalletOutlined,
+  EllipsisOutlined,
+  MoneyCollectFilled,
 } from '@ant-design/icons';
 import { MdAdd, MdMoney, MdVerifiedUser, MdWallet } from 'react-icons/md';
 
@@ -47,6 +49,10 @@ const breadcrumb: BreadcrumbProps = {
 const Users = () => {
   const actionRef = useRef<ActionType>();
   const [modal, modalContextHolder] = Modal.useModal();
+  const [vipSelection, setVipSelection] = useState<number | null>(null);
+
+  const [realBalance, setRealbalance] = useState<number | null>(null);
+
 
   const columns: ProColumns[] = [
     {
@@ -139,7 +145,14 @@ const Users = () => {
             <label>Số Ngày Checkin:</label>
             <div>{row?.checkInToday}</div>
           </div>
-
+          <div className='flex gap-2'>
+            <label>Số Ticker:</label>
+            <div>{row?.duckSticker}</div>
+          </div>
+          <div className='flex gap-2'>
+            <label>Số Lần tìm kho báu:</label>
+            <div>{row?.mineNum}</div>
+          </div>
         </div>
       )
     },
@@ -174,7 +187,7 @@ const Users = () => {
                   fontWeight: 600
                 }}>{mainBank?.nameBank}</div>
               </div>
-              
+
 
             </div>
           )
@@ -236,6 +249,8 @@ const Users = () => {
     }
   };
 
+
+
   const showDeleteConfirmation = (user: User) => {
     modal.confirm({
       title: 'Are you sure to delete this user?',
@@ -274,9 +289,25 @@ const Users = () => {
       },
     });
   };
+  const handleSearchVip = (value: string) => {
+    console.log(`selected ${value}`);
+  };
 
+
+  const handleMenuClick = (e: any) => {
+    // Cập nhật giá trị vipSelection khi người dùng chọn 1 menu item
+    setVipSelection(e.key);
+    actionRef?.current?.reload()
+  };
+
+  const handleMenuClickSelectRelbalnce = (e: any) => {
+    // Cập nhật giá trị vipSelection khi người dùng chọn 1 menu item
+    setRealbalance(e.key);
+    actionRef?.current?.reload()
+  };
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
+
       <ProTable
         columns={columns}
         cardBordered={false}
@@ -287,6 +318,7 @@ const Users = () => {
             title: 'Mocked data',
           },
           title: <FiUsers className="opacity-60" />,
+
         }}
         bordered={true}
         showSorterTooltip={false}
@@ -305,6 +337,8 @@ const Users = () => {
                 page: params.current,
                 per_page: params.pageSize,
                 search: params.keyword,
+                vip: vipSelection,
+                realBalance
               },
             })
             .then((response) => {
@@ -327,6 +361,42 @@ const Users = () => {
         }}
         dateFormatter="string"
         search={false}
+        toolBarRender={() => [
+          <Dropdown
+            key="menu"
+            overlay={
+              <Menu onClick={handleMenuClick}>
+                <Menu.Item key="1">Vip1</Menu.Item>
+                <Menu.Item key="2">Vip2</Menu.Item>
+                <Menu.Item key="3">Vip3</Menu.Item>
+                <Menu.Item key="4">Vip4</Menu.Item>
+                <Menu.Item key="6">Vip6</Menu.Item>
+                <Menu.Item key="7">Vip7</Menu.Item>
+                <Menu.Item key="8">Vip8</Menu.Item>
+              </Menu>
+            }
+          >
+            <Button>
+              <EllipsisOutlined />
+            </Button>
+          </Dropdown>,
+          <Dropdown
+            key="menu"
+            overlay={
+              <Menu onClick={handleMenuClickSelectRelbalnce}>
+                <Menu.Item key="5">{"Số dư >= 5"}</Menu.Item>
+                <Menu.Item key="10">{"Số dư >= 10"}</Menu.Item>
+                <Menu.Item key="15">{"Số dư >= 15"}</Menu.Item>
+              </Menu>
+            }
+          >
+            <Button>
+              <MoneyCollectFilled />
+            </Button>
+          </Dropdown>,
+        ]
+
+        }
         rowKey="_id"
         options={{
           search: {
@@ -334,6 +404,7 @@ const Users = () => {
             width: 200,
             allowClear: true,
           },
+
         }}
       />
       {modalContextHolder}

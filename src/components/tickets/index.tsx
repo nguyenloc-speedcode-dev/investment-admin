@@ -7,7 +7,7 @@ import {
   ProDescriptions,
 } from '@ant-design/pro-components';
 import { Avatar, BreadcrumbProps, Modal, Space, Tag } from 'antd';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
@@ -49,6 +49,22 @@ const breadcrumb: BreadcrumbProps = {
 const Tickets = () => {
   const actionRef = useRef<ActionType>();
   const [modal, modalContextHolder] = Modal.useModal();
+  const [data, setData] = useState<any>()
+  const getData = async () => {
+    try {
+      const res = await http.get(apiRoutes.dataTickets)
+      if (res && res.data) {
+        setData(res.data?.data)
+      }
+    } catch (error) {
+      console.log(error);
+
+    }
+  }
+
+  useEffect(() => {
+    getData()
+  }, [])
 
   const columns: ProColumns[] = [
     {
@@ -189,13 +205,13 @@ const Tickets = () => {
       render: (userId, row: any) => (
         <div>
           {
-            row?.transaction_type === 'reward_ticket' && <Tag color='cyan'>Trả thưởng</Tag>
+            row?.transaction_type === 'reward_ticket' && <Tag color='cyan-inverse'>Trả thưởng</Tag>
           }
           {
-            row?.transaction_type === 'buy_ticket' && <Tag color='blue'>Mua ticket</Tag>
+            row?.transaction_type === 'buy_ticket' && <Tag color='green-inverse'>Mua ticket</Tag>
           }
           {
-            row?.transaction_type === 'refund_ticket' && <Tag color='blue'>Trả lại Ticket</Tag>
+            row?.transaction_type === 'refund_ticket' && <Tag color='geekblue-inverse'>Trả lại Ticket</Tag>
           }
         </div>
       )
@@ -266,6 +282,37 @@ const Tickets = () => {
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
+      <div className='grid grid-cols-4 '>
+        <div className='my-4'>
+          <div className='flex gap-2 items-center'>
+            Tổng Ticket Đang Earn:
+            <div className='font-[900]'>
+              {data?.countTicketProgress?.toLocaleString()}
+            </div>
+          </div>
+          <div className='flex gap-2 items-center'>
+            Tổng Ticket Đã Trả:
+            <div className='font-[900]'>
+              {data?.countTicketFinish?.toLocaleString()}
+            </div>
+          </div>
+        </div>
+        <div className='my-4'>
+          <div className='flex gap-2 items-center'>
+            Tổng ticket kết thúc hôm nay:
+            <div className='font-[900]'>
+              {data?.countTicketFinishToday?.toLocaleString()}
+            </div>
+          </div>
+          <div className='flex gap-2 items-center'>
+            Tổng tiền trả hôm nay:
+            <div className='font-[900]'>
+              {data?.totalEarnToday?.toLocaleString()}$
+            </div>
+          </div>
+        </div>
+     
+      </div>
       <ProTable
         columns={columns}
         cardBordered={false}
