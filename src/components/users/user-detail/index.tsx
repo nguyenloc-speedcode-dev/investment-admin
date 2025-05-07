@@ -1,5 +1,5 @@
 import { BreadcrumbProps, Button, Card, Col, Form, Input, List, message, Modal, notification, Row, Spin, Tabs, Tag } from 'antd';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { webRoutes } from '../../../routes/web';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import BasePageContainer from '../../layout/PageContainer';
@@ -57,6 +57,14 @@ const UserDetail = () => {
     if (userId)
       getUserDetail()
   }, [userId])
+
+
+  const getInvest = (status: string) => {
+    return detail?.ticketTransactions?.filter(
+      (i: any) => i?.transaction_status === status
+    ) || [];
+  };
+
 
   const openConfirmDelete = () => {
     Modal.confirm({
@@ -168,21 +176,100 @@ const UserDetail = () => {
             />
           }
           {
-            openModal.updateType==='tickets' && 
+            openModal.updateType === 'tickets' &&
             <Tabs
               defaultActiveKey="1"
               items={[
                 {
                   label: `Gói đang đầu tư`,
                   key: '1',
-                  children: `Content of Tab Pane 1`,
+                  children: <List
+                    className="demo-loadmore-list"
+                    itemLayout="horizontal"
+                    dataSource={getInvest("processing")}
+                    renderItem={(item: any) => (
+                      <List.Item
+                        actions={[<Button key="list-loadmore-edit"
+                          onClick={async () => {
+                            try {
+                              const res = await http.post(apiRoutes.updateUser, {
+                                updateType: 'ticket_cancel',
+                                userId,
+                                ticketId: item?._id
+                              });
+                              if (res && res.data) {
+                                message.success('Cập nhật thành công');
+                                getUserDetail()
+                              }
+                            } catch (error: any) {
+                              message.error(error?.response?.data?.message || 'Thử lại sau');
+                            }
+                          }}
+
+                        >Huỷ gói</Button>]}
+                      >
+                        <List.Item.Meta
+                          title={<div className='font-[700]'>{item?.ticket?.name}</div>}
+                          description={
+                            <div>
+                              <div className='flex justify-between items-center mb-3'>
+                                <div>Mã giao dịch</div>
+                                <div>{item?._id}</div>
+                              </div>
+                              <div className='flex justify-between items-center mb-3'>
+                                <div>Số tiền đầu tư</div>
+                                <div>{item?.value?.toLocaleString()}</div>
+                              </div>
+                              <div className='flex justify-between items-center mb-3'>
+                                <div>Ngày đầu tư</div>
+                                <div>{new Date(item?.createdAt)?.toLocaleString()}</div>
+                              </div>
+                            </div>
+                          }
+                        />
+                      </List.Item>
+                    )}
+                  />,
                 },
                 {
                   label: `Gói đã trả`,
                   key: '2',
-                  children: `Content of Tab Pane 2`,
+                  children: <List
+                    className="demo-loadmore-list"
+                    itemLayout="horizontal"
+                    dataSource={getInvest("finish")}
+                    renderItem={(item: any) => (
+                      <List.Item
+
+                      >
+                        <List.Item.Meta
+                          title={<div className='font-[700]'>{item?.ticket?.name}</div>}
+                          description={
+                            <div>
+                              <div className='flex justify-between items-center mb-3'>
+                                <div>Mã giao dịch</div>
+                                <div>{item?._id}</div>
+                              </div>
+                              <div className='flex justify-between items-center mb-3'>
+                                <div>Số tiền đầu tư</div>
+                                <div>{item?.value?.toLocaleString()}</div>
+                              </div>
+                              <div className='flex justify-between items-center mb-3'>
+                                <div>Ngày đầu tư</div>
+                                <div>{new Date(item?.createdAt)?.toLocaleString()}</div>
+                              </div>
+                              <div className='flex justify-between items-center mb-3'>
+                                <div>Ngày cập nhât</div>
+                                <div>{new Date(item?.updatedAt)?.toLocaleString()}</div>
+                              </div>
+                            </div>
+                          }
+                        />
+                      </List.Item>
+                    )}
+                  />,
                 },
-                
+
               ]}
             />
           }

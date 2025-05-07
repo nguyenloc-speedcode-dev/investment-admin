@@ -16,8 +16,8 @@ const breadcrumb: BreadcrumbProps = {
       title: <Link to={webRoutes.dashboard}>Dashboard</Link>,
     },
     {
-      key: webRoutes.about,
-      title: <Link to={webRoutes.about}>About</Link>,
+      key: webRoutes.setting,
+      title: <Link to={webRoutes.about}>Cài đặt</Link>,
     },
   ],
 };
@@ -69,7 +69,7 @@ const Setting = () => {
         <article>
 
           <div>
-           
+
             <div className="my-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="group relative rounded-xl border border-slate-200 p-4">
                 <div className='my-2'>
@@ -93,6 +93,20 @@ const Setting = () => {
                       handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT_BANKING", checked ? "0" : "1")
                     }} /></div>
                   </div>
+                  <hr className='my-4' />
+
+                  <h1 className='my-2 font-[500] mb-3'>Cài đặt CSKH</h1>
+                  <a className='text-blue-700' href={config?.CUSTOMER_SERVICE} target='_blank'>{config?.CUSTOMER_SERVICE}</a>
+                  <Form className='mt-5' onFinish={async (form) => {
+                    handleUpdateConfig("CUSTOMER_SERVICE", form?.value)
+                  }}>
+                    <Form.Item name="value" >
+                      <Input placeholder='Nhập link CSKH' />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button htmlType='submit'>Thay đổi</Button>
+                    </Form.Item>
+                  </Form>
                 </div>
               </div>
               <div className="group relative rounded-xl border border-slate-200 p-4">
@@ -111,6 +125,7 @@ const Setting = () => {
                 <Form className='mt-5' onFinish={async (form) => {
                   handleUpdateConfig("PAYMENT_GATEWAY", JSON.stringify(form))
                 }}>
+
                   <Form.Item name="holderName" >
                     <Input placeholder='Tên chủ thẻ' />
                   </Form.Item>
