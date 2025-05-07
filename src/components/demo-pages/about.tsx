@@ -69,10 +69,7 @@ const Setting = () => {
         <article>
 
           <div>
-            <p className="lead">
-              An out-of-box UI solution for enterprise applications as a React
-              boilerplate.{' '}
-            </p>
+           
             <div className="my-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="group relative rounded-xl border border-slate-200 p-4">
                 <div className='my-2'>
