@@ -285,13 +285,13 @@ const Tickets = () => {
       <div className='grid grid-cols-4 '>
         <div className='my-4'>
           <div className='flex gap-2 items-center'>
-            Tổng Ticket Đang Earn:
+            Tổng gói đầu tư:
             <div className='font-[900]'>
               {data?.countTicketProgress?.toLocaleString()}
             </div>
           </div>
           <div className='flex gap-2 items-center'>
-            Tổng Ticket Đã Trả:
+            Tổng gói đã trả:
             <div className='font-[900]'>
               {data?.countTicketFinish?.toLocaleString()}
             </div>
@@ -299,13 +299,13 @@ const Tickets = () => {
         </div>
         <div className='my-4'>
           <div className='flex gap-2 items-center'>
-            Tổng ticket kết thúc hôm nay:
+            Tổng gói kết thúc hôm nay:
             <div className='font-[900]'>
               {data?.countTicketFinishToday?.toLocaleString()}
             </div>
           </div>
           <div className='flex gap-2 items-center'>
-            Tổng tiền trả hôm nay:
+            Tổng gói trả hôm nay:
             <div className='font-[900]'>
               {data?.totalEarnToday?.toLocaleString()}$
             </div>

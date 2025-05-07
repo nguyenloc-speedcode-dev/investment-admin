@@ -101,15 +101,15 @@ const HistoryUser = () => {
             <div className='flex flex-col gap-1'>
               <div className='flex gap-2'>
                 <label>Tên Ngân Hàng:</label>
-                <div className='font-[700]'>{bankInfo?.nameBank}</div>
+                <div className='font-[700]'>{bankInfo?.nameBank ||"-"}</div>
               </div>
               <div className='flex gap-2'>
                 <label>Tên Chủ Thẻ:</label>
-                <div className='font-[700]'>{bankInfo?.holderName}</div>
+                <div className='font-[700]'>{bankInfo?.holderName || "-"}</div>
               </div>
               <div className='flex gap-2'>
                 <label>STK:</label>
-                <div className='font-[700]'>{bankInfo?.numberBank}</div>
+                <div className='font-[700]'>{bankInfo?.numberBank || "-"}</div>
               </div>
               <div className='flex gap-2'>
                 <label>Số lượng ($):</label>

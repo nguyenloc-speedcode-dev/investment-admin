@@ -37,7 +37,7 @@ export const sidebar = [
   {
     path: webRoutes.tickets,
     key: webRoutes.tickets,
-    name: 'Lịch sử mua Ticket',
+    name: 'Lịch sử đầu tư',
     icon: <HistoryOutlined />,
   },
   {

@@ -3,6 +3,8 @@ import { API_URL } from '../utils';
 export const apiRoutes = {
   login: `${API_URL}/auth/admin`,
   dataUsers: `${API_URL}/admin/data-users`,
+  updateUser: `${API_URL}/admin/userData`,
+  dataUserDetail: (userId: string) => `${API_URL}/admin/user/${userId}`,
   dataTickets: `${API_URL}/admin/data-tickets`,
   getAdmin: `${API_URL}/admin`,
   getConfigs: `${API_URL}/admin/configs`,
@@ -13,4 +15,5 @@ export const apiRoutes = {
   logout: `${API_URL}/logout`,
   users: `${API_URL}/admin/users`,
   reviews: `${API_URL}/unknown`,
+
 };
