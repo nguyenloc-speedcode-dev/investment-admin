@@ -8,6 +8,7 @@ import packageJson from '../../../package.json';
 import { useEffect, useState } from 'react';
 import http from '../../utils/http';
 import { apiRoutes } from '../../routes/api';
+import TextArea from 'antd/es/input/TextArea';
 
 const breadcrumb: BreadcrumbProps = {
   items: [
@@ -102,6 +103,21 @@ const Setting = () => {
                   }}>
                     <Form.Item name="value" >
                       <Input placeholder='Nhập link CSKH' />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button htmlType='submit'>Thay đổi</Button>
+                    </Form.Item>
+                  </Form>
+
+                  <hr className='my-4' />
+
+                  <h1 className='my-2 font-[500] mb-3'>Cài đặt thông báo</h1>
+                  <div className='text-gray-800' >{config?.NOTIFICATION}</div>
+                  <Form className='mt-5' onFinish={async (form) => {
+                    handleUpdateConfig("NOTIFICATION", form?.value)
+                  }}>
+                    <Form.Item name="value" >
+                      <TextArea placeholder='Nhập nội dung' rows={3} />
                     </Form.Item>
                     <Form.Item>
                       <Button htmlType='submit'>Thay đổi</Button>
