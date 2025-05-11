@@ -12,6 +12,7 @@ import Login from '../components/auth/Login';
 import About from '../components/demo-pages/about';
 import Setting from '../components/demo-pages/about';
 import UserDetail from '../components/users/user-detail';
+import Codes from '../components/codes';
 
 const errorElement = <ErrorPage />;
 const fallbackElement = <ProgressBar />;
@@ -103,7 +104,10 @@ export const browserRouter = createBrowserRouter([
         path: webRoutes.tickets,
         element: <TicketHistory />,
       },
-
+      {
+        path: webRoutes.codes,
+        element: <Codes />,
+      },
     ],
   },
 

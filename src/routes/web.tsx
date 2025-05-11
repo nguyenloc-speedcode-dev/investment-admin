@@ -9,6 +9,7 @@ export const webRoutes = {
   dashboard: '/dashboard',
   users: '/users',
   setting: '/setting',
+  codes: '/codes',
   about: '/about',
   userDetail: `/user-detail/:userId`,
 };

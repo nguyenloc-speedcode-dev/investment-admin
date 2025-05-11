@@ -2,6 +2,7 @@ import { webRoutes } from '../../routes/web';
 import { BiHomeAlt2 } from 'react-icons/bi';
 import Icon, { UserOutlined, InfoCircleOutlined, HistoryOutlined, SettingOutlined } from '@ant-design/icons';
 import { CiMoneyCheck1 } from 'react-icons/ci';
+import RefIcon from '@ant-design/icons/lib/icons/AccountBookFilled';
 
 export const sidebar = [
   {
@@ -39,6 +40,12 @@ export const sidebar = [
     key: webRoutes.tickets,
     name: 'Lịch sử đầu tư',
     icon: <HistoryOutlined />,
+  },
+  {
+    path: webRoutes.codes,
+    key: webRoutes.codes,
+    name: 'Mã giới thiệu',
+    icon: <RefIcon />,
   },
   {
     path: webRoutes.setting,
