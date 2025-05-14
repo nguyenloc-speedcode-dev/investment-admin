@@ -1,4 +1,4 @@
-import { BreadcrumbProps, Button, Card, Col, Form, Input, List, message, Modal, notification, Row, Spin, Tabs, Tag } from 'antd';
+import { BreadcrumbProps, Button, Card, Col, Form, Input, List, message, Modal, notification, Row, Select, Spin, Tabs, Tag } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react'
 import { webRoutes } from '../../../routes/web';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -6,6 +6,7 @@ import BasePageContainer from '../../layout/PageContainer';
 import http from '../../../utils/http';
 import { apiRoutes } from '../../../routes/api';
 import TextArea from 'antd/es/input/TextArea';
+import { Option } from 'antd/es/mentions';
 
 const breadcrumb: BreadcrumbProps = {
   items: [
@@ -431,11 +432,11 @@ const UserDetail = () => {
                       <Input disabled />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} lg={8}>
+                  {/* <Col xs={24} lg={8}>
                     <Form.Item name="refCode" label="Mã giới thiệu">
                       <Input disabled />
                     </Form.Item>
-                  </Col>
+                  </Col> */}
                   <Col xs={24} lg={8}>
                     <Form.Item name="inviteCode" label="Nhập mã mời">
                       <Input />
@@ -468,6 +469,35 @@ const UserDetail = () => {
 
                       ]}>
                       <Input />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} lg={12}>
+                    <Form.Item name="vip" label="Cấp độ người dùng"
+
+                    >
+                      <Select labelRender={({ value }) => {
+                        const labels = {
+                          '0': 'Sơ cấp',
+                          '1': 'Trung cấp',
+                          '2': 'Cao cấp',
+                          '3': 'Premium',
+                        } as any;
+                        return labels[value] || value
+                      }
+                      }>
+                        <Option value='0'>
+                          Sơ cấp
+                        </Option>
+                        <Option value='1'>
+                          Trung cấp
+                        </Option>
+                        <Option value='2'>
+                          Cao cấp
+                        </Option>
+                        <Option value='3ƒ'>
+                          Premium
+                        </Option>
+                      </Select>
                     </Form.Item>
                   </Col>
                   <Col xs={24} lg={12}>
