@@ -41,12 +41,7 @@ export const sidebar = [
     name: 'Lịch sử đầu tư',
     icon: <HistoryOutlined />,
   },
-  {
-    path: webRoutes.codes,
-    key: webRoutes.codes,
-    name: 'Mã giới thiệu',
-    icon: <RefIcon />,
-  },
+
   {
     path: webRoutes.setting,
     key: webRoutes.setting,

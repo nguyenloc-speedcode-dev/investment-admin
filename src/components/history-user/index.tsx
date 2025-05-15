@@ -6,7 +6,7 @@ import {
   TableDropdown,
   ProDescriptions,
 } from '@ant-design/pro-components';
-import { Avatar, BreadcrumbProps, Modal, Space, Tag } from 'antd';
+import { Avatar, BreadcrumbProps, Card, Modal, Space, Tag } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
@@ -101,7 +101,7 @@ const HistoryUser = () => {
             <div className='flex flex-col gap-1'>
               <div className='flex gap-2'>
                 <label>Tên Ngân Hàng:</label>
-                <div className='font-[700]'>{bankInfo?.nameBank ||"-"}</div>
+                <div className='font-[700]'>{bankInfo?.nameBank || "-"}</div>
               </div>
               <div className='flex gap-2'>
                 <label>Tên Chủ Thẻ:</label>
@@ -201,7 +201,7 @@ const HistoryUser = () => {
       render: (userId, row: any) => (
         <div>
           {
-            row?.transaction_type === 'reward_refferal' && <Tag color='cyan'>Thưởng giới thiệu</Tag>
+            row?.transaction_type === 'reward_refferal' && <Tag color='cyan-inverse'>Thưởng giới thiệu</Tag>
           }
           {
             row?.transaction_type === 'withdraw' && <Tag color='red-inverse'>Rút tiền</Tag>
@@ -210,13 +210,13 @@ const HistoryUser = () => {
             row?.transaction_type === 'deposit' && <Tag color='geekblue-inverse'>Nạp tiền</Tag>
           }
           {
-            row?.transaction_type === 'checkin' && <Tag color='gold'>Điểm danh</Tag>
+            row?.transaction_type === 'checkin' && <Tag color='red-inverse'>Điểm danh</Tag>
           }
           {
-            row?.transaction_type === 'reward_draw' && <Tag color='gold'>Vòng quay may mắn</Tag>
+            row?.transaction_type === 'reward_draw' && <Tag color='green-inverse'>Vòng quay may mắn</Tag>
           }
           {
-            row?.transaction_type === 'reward_mine' && <Tag color='gold'>Đi tìm kho báu</Tag>
+            row?.transaction_type === 'reward_mine' && <Tag color='gold-inverse'>Đi tìm kho báu</Tag>
           }
         </div>
       )
@@ -240,7 +240,7 @@ const HistoryUser = () => {
             row?.transaction_status === 'cancel' && <Tag className='text-center' color='red-inverse'>Đã huỷ</Tag>
           }
           {
-            row?.transaction_status === 'finish' && <Tag className='text-center' color='green-inverse'>Đã giải quyết</Tag>
+            row?.transaction_status === 'finish' && <Tag className='text-center' color='green-inverse'>Hoàn thành</Tag>
           }
         </div>
       )
@@ -330,64 +330,73 @@ const HistoryUser = () => {
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
-      <div className='grid grid-cols-4 '>
-        <div className='my-4'>
-          <div className='flex gap-2 items-center'>
-            Tổng tiền nạp:
-            <div className='font-[900]'>
-              {data?.totalDepositAllTime?.toLocaleString()}$
+      <div className='grid sm:grid-cols-2 xl:grid-cols-4 gap-4'>
+        <Card>
+          <div className='my-4'>
+            <div className='flex gap-2 items-center'>
+              Tổng tiền nạp:
+              <div className='font-[900]'>
+                {data?.totalDepositAllTime?.toLocaleString()}$
+              </div>
+            </div>
+            <div className='flex gap-2 items-center'>
+              Tổng tiền rút:
+              <div className='font-[900]'>
+                {data?.totalWithdrawAllTime?.toLocaleString()}$
+              </div>
             </div>
           </div>
-          <div className='flex gap-2 items-center'>
-            Tổng tiền rút:
-            <div className='font-[900]'>
-              {data?.totalWithdrawAllTime?.toLocaleString()}$
+        </Card>
+        <Card>
+          <div className='my-4'>
+            <div className='flex gap-2 items-center'>
+              Tổng tiền nạp hôm nay:
+              <div className='font-[900]'>
+                {data?.totalDepositToday?.toLocaleString()}$
+              </div>
+            </div>
+            <div className='flex gap-2 items-center'>
+              Tổng tiền rút hôm nay:
+              <div className='font-[900]'>
+                {data?.totalWithdrawToday?.toLocaleString()}$
+              </div>
             </div>
           </div>
-        </div>
-        <div className='my-4'>
-          <div className='flex gap-2 items-center'>
-            Tổng tiền nạp hôm nay:
-            <div className='font-[900]'>
-              {data?.totalDepositToday?.toLocaleString()}$
+        </Card>
+        <Card>
+          <div className='my-4'>
+            <div className='flex gap-2 items-center'>
+              Sô lần nạp hôm nay:
+              <div className='font-[900]'>
+                {data?.countDepositToday?.toLocaleString()}
+              </div>
+            </div>
+            <div className='flex gap-2 items-center'>
+              Tổng lần rút hôm nay
+              <div className='font-[900]'>
+                {data?.countWithdrawToday?.toLocaleString()}
+              </div>
             </div>
           </div>
-          <div className='flex gap-2 items-center'>
-            Tổng tiền rút hôm nay:
-            <div className='font-[900]'>
-              {data?.totalWithdrawToday?.toLocaleString()}$
+        </Card>
+        <Card>
+          <div className='my-4'>
+            <div className='flex gap-2 items-center'>
+              Tổng Số lần nạp:
+              <div className='font-[900]'>
+                {data?.countDepositAllTime?.toLocaleString()}
+              </div>
+            </div>
+            <div className='flex gap-2 items-center'>
+              Tổng số lần rút :
+              <div className='font-[900]'>
+                {data?.countWithdrawAllTime?.toLocaleString()}
+              </div>
             </div>
           </div>
-        </div>
-        <div className='my-4'>
-          <div className='flex gap-2 items-center'>
-            Sô lần nạp hôm nay:
-            <div className='font-[900]'>
-              {data?.countDepositToday?.toLocaleString()}
-            </div>
-          </div>
-          <div className='flex gap-2 items-center'>
-            Tổng lần rút hôm nay
-            <div className='font-[900]'>
-              {data?.countWithdrawToday?.toLocaleString()}
-            </div>
-          </div>
-        </div>
-        <div className='my-4'>
-          <div className='flex gap-2 items-center'>
-            Tổng Số lần nạp:
-            <div className='font-[900]'>
-              {data?.countDepositAllTime?.toLocaleString()}
-            </div>
-          </div>
-          <div className='flex gap-2 items-center'>
-            Tổng số lần rút :
-            <div className='font-[900]'>
-              {data?.countWithdrawAllTime?.toLocaleString()}
-            </div>
-          </div>
-        </div>
+        </Card>
       </div>
+
       <ProTable
         columns={columns}
         cardBordered={false}

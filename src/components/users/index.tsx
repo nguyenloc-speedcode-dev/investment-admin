@@ -97,8 +97,12 @@ const Users = () => {
             <div>{row?.phone}</div>
           </div>
           <div className='flex gap-2'>
-            <label>VIP:</label>
+            <label>Đại lý:</label>
             <div>{row?.vip}</div>
+          </div>
+          <div className='flex gap-2'>
+            <label>VIP:</label>
+            <div>{row?.farmVip}</div>
           </div>
           <div className='flex gap-2'>
             <label>Mật khẩu:</label>
@@ -137,7 +141,18 @@ const Users = () => {
             <label>Mật khẩu ví:</label>
             <div>{row?.payment_password}</div>
           </div>
-          <div className='flex gap-2'>
+
+        </div>
+      )
+    },
+    {
+      title: 'Hoạt động',
+      dataIndex: 'phone',
+      align: 'center',
+      sorter: false,
+      render: (userId, row: any) => (
+        <div className='flex flex-col gap-1'>
+          <div className='flex gap-2' >
             <label>Số Vòng Quay:</label>
             <div>{row?.drawNum}</div>
           </div>
@@ -154,50 +169,9 @@ const Users = () => {
             <div>{row?.mineNum}</div>
           </div>
         </div>
+
       )
     },
-    // {
-    //   title: 'Tài khoản',
-    //   dataIndex: 'bankList',
-    //   align: 'center',
-    //   sorter: false,
-    //   render: (bankList: any, row: any) => {
-    //     if (bankList?.length > 0) {
-    //       const mainBank = bankList[0]
-    //       return (
-    //         <div className='flex flex-col gap-1'>
-    //           <div className='flex gap-2'>
-    //             <label>Tên TK</label>
-    //             <div style={{
-    //               color: row?.user?.realBalance >= 5 ? "red" : "#000",
-    //               fontWeight: 600
-    //             }}>{mainBank?.holderName}</div>
-    //           </div>
-    //           <div className='flex gap-2'>
-    //             <label>Số TK</label>
-    //             <div style={{
-    //               color: row?.user?.realBalance >= 5 ? "red" : "#000",
-    //               fontWeight: 600
-    //             }}>{mainBank?.numberBank}</div>
-    //           </div>
-    //           <div className='flex gap-2'>
-    //             <label>Tên Ngân Hàng</label>
-    //             <div style={{
-    //               color: row?.user?.realBalance >= 5 ? "red" : "#000",
-    //               fontWeight: 600
-    //             }}>{mainBank?.nameBank}</div>
-    //           </div>
-
-
-    //         </div>
-    //       )
-    //     }
-
-    //   }
-
-
-
-    // },
     {
       title: 'Action',
       align: 'center',
@@ -207,12 +181,14 @@ const Users = () => {
         return (
           <div className='flex justify-center'>
             {
-              row?.roles[0]?.code === 'USER' &&
-              <Link to={`/user-detail/${row?._id}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-              </Link>
+              row?.roles?.[0]?.code === 'USER' ?
+                <Link to={`/user-detail/${row?._id}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                  </svg>
+                </Link>
+                :
+                <h3 className='text-red-600 font-[900]'>ADMIN</h3>
             }
 
 

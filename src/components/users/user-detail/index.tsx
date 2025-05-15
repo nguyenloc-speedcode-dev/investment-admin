@@ -1,4 +1,4 @@
-import { BreadcrumbProps, Button, Card, Col, Form, Input, List, message, Modal, notification, Row, Spin, Tabs, Tag } from 'antd';
+import { BreadcrumbProps, Button, Card, Col, Form, Input, List, message, Modal, notification, Row, Spin, Switch, Tabs, Tag } from 'antd';
 import React, { useEffect, useMemo, useState } from 'react'
 import { webRoutes } from '../../../routes/web';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -279,11 +279,18 @@ const UserDetail = () => {
       <Spin fullscreen spinning={loading} />
       <Row gutter={[16, 16]} className='mb-3' >
         <Col xs={12} lg={6} >
-          <Card title="Số dư" style={{
+          <Card title="Thông tin " style={{
             height: "100%"
           }}>
-            <div className='flex justify-between items-center'>
-              <h3 className='font-[700]'>{detail?.realBalance?.toLocaleString()}</h3>
+            <div className='flex justify-between items-center mb-4'>
+              <h2>Số dư:</h2>
+              <h3 className='font-[700]'> {detail?.realBalance?.toLocaleString()}</h3>
+            </div>
+            <div className='flex justify-between items-center' >
+              <h2>Khoá/Mở tài khoản</h2>
+              <Switch style={{
+                backgroundColor:'#cccc'
+              }} checkedChildren="Khoá " unCheckedChildren="Mở"/>
             </div>
           </Card>
         </Col>
@@ -416,48 +423,54 @@ const UserDetail = () => {
                 }
               }}>
                 <Row gutter={[8, 8]} >
-                  <Col xs={24} lg={8}>
+                  <Col xs={24} lg={6}>
                     <Form.Item name="userId" label="ID">
                       <Input disabled />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} lg={8}>
+                  <Col xs={24} lg={6}>
                     <Form.Item name="registerIp" label="IP">
                       <Input disabled />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} lg={8}>
+                  <Col xs={24} lg={6}>
                     <Form.Item name="uuid" label="UUID">
                       <Input disabled />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} lg={8}>
+                  <Col xs={24} lg={6}>
                     <Form.Item name="refCode" label="Mã giới thiệu">
                       <Input disabled />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} lg={8}>
-                    <Form.Item name="inviteCode" label="Nhập mã mời">
-                      <Input />
+                  
+                  <Col xs={24} lg={6}>
+                    <Form.Item name="vip" label="Cấp Đại Lý">
+                        <Input disabled />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} lg={8}>
-                    <Form.Item name="uuid" label="Trạng thái">
-                      <Tag color='green-inverse'>Hoạt động</Tag>
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} lg={12}>
+                    <Col xs={24} lg={6}>
+                      <Form.Item name="farmVip" label="Level Trang Trại">
+                        <Input disabled />
+                      </Form.Item>
+                    </Col>
+                  <Col xs={24} lg={6}>
                     <Form.Item name="userName" label="Tên tài khoản">
                       <Input disabled />
                     </Form.Item>
                   </Col>
 
-                  <Col xs={24} lg={12}>
+                  <Col xs={24} lg={6}>
                     <Form.Item name="phone" label="Số điện thoại">
                       <Input disabled />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} lg={12}>
+                    <Col xs={24} lg={6}>
+                      <Form.Item name="inviteCode" label="Nhập mã mời">
+                        <Input />
+                      </Form.Item>
+                    </Col>
+                  <Col xs={24} lg={6}>
                     <Form.Item name="password" label="Mật khẩu đăng nhập"
 
                       rules={[
@@ -470,7 +483,7 @@ const UserDetail = () => {
                       <Input />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} lg={12}>
+                  <Col xs={24} lg={6}>
                     <Form.Item name="payment_password" label="Mật khẩu giao dịch"
                       rules={[
                         {
@@ -483,7 +496,7 @@ const UserDetail = () => {
                       <Input />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} lg={12}>
+                  <Col xs={24} lg={24}>
                     <Form.Item >
                       <div className='flex gap-3 items-center'>
                         <Button

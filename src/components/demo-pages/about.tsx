@@ -97,9 +97,9 @@ const Setting = () => {
                   <hr className='my-4' />
 
                   <h1 className='my-2 font-[500] mb-3'>Cài đặt CSKH</h1>
-                  <a className='text-blue-700' href={config?.CUSTOMER_SERVICE} target='_blank'>{config?.CUSTOMER_SERVICE}</a>
+                  <a className='text-blue-700' href={"#"} target='_blank'>{config?.LIVECHAT_ID}</a>
                   <Form className='mt-5' onFinish={async (form) => {
-                    handleUpdateConfig("CUSTOMER_SERVICE", form?.value)
+                    handleUpdateConfig("LIVECHAT_ID", form?.value)
                   }}>
                     <Form.Item name="value" >
                       <Input placeholder='Nhập link CSKH' />
@@ -108,21 +108,21 @@ const Setting = () => {
                       <Button htmlType='submit'>Thay đổi</Button>
                     </Form.Item>
                   </Form>
-
                   <hr className='my-4' />
 
-                  <h1 className='my-2 font-[500] mb-3'>Cài đặt thông báo</h1>
-                  <div className='text-gray-800' >{config?.NOTIFICATION}</div>
+                  <h1 className='my-2 font-[500] mb-3'>Cài đặt giá USDT</h1>
+                  <div className='text-gray-800' >{Number(config?.USDT_PRICE)}</div>
                   <Form className='mt-5' onFinish={async (form) => {
-                    handleUpdateConfig("NOTIFICATION", form?.value)
+                    handleUpdateConfig("USDT_PRICE", form?.value)
                   }}>
                     <Form.Item name="value" >
-                      <TextArea placeholder='Nhập nội dung' rows={3} />
+                      <Input placeholder='Nhập nội dung' type='number' />
                     </Form.Item>
                     <Form.Item>
                       <Button htmlType='submit'>Thay đổi</Button>
                     </Form.Item>
                   </Form>
+
                 </div>
               </div>
               <div className="group relative rounded-xl border border-slate-200 p-4">
@@ -158,6 +158,21 @@ const Setting = () => {
                     <Button htmlType='submit'>Thay đổi</Button>
                   </Form.Item>
                 </Form>
+                <hr className='my-4' />
+
+                <h1 className='my-2 font-[500] mb-3'>Cài đặt phí rút</h1>
+                <div className='text-gray-800' >{config?.FEE_WIDTHDRAW}%</div>
+                <Form className='mt-5' onFinish={async (form) => {
+                  handleUpdateConfig("FEE_WIDTHDRAW", form?.value)
+                }}>
+                  <Form.Item name="value" >
+                    <Input placeholder='Nhập nội dung' type='number' />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button htmlType='submit'>Thay đổi</Button>
+                  </Form.Item>
+                </Form>
+
               </div>
 
             </div>

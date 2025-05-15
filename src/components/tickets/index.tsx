@@ -6,7 +6,7 @@ import {
   TableDropdown,
   ProDescriptions,
 } from '@ant-design/pro-components';
-import { Avatar, BreadcrumbProps, Modal, Space, Tag } from 'antd';
+import { Avatar, BreadcrumbProps, Card, Modal, Space, Tag } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
@@ -74,7 +74,7 @@ const Tickets = () => {
       sorter: false,
       render: (userId, row: any) => (
         <div className='flex flex-col gap-1'>
-          <img src={`https://api.vinnfastcapitalgroup.com${row?.ticket?.urlImage}`} width={70} className='m-auto' />
+          <img src={`https://api.rich-farmer.online${row?.ticket?.urlImage}`} width={70} className='m-auto' />
           {
             row?.transaction_type === "reward_ticket" &&
 
@@ -114,7 +114,7 @@ const Tickets = () => {
             <label>Số dư:</label>
             <div style={{
               color: row?.user?.realBalance >= 5 ? "red" : "#000",
-              fontWeight:600
+              fontWeight: 600
             }}>{row?.user?.realBalance?.toLocaleString()}</div>
           </div>
           <div className='flex gap-2'>
@@ -197,21 +197,21 @@ const Tickets = () => {
       dataIndex: 'transaction_type',
       align: 'center',
       filters: [
-        { text: 'Trả thưởng', value: 'reward_ticket' },
-        { text: 'Mua ticket', value: 'buy_ticket' },
-        { text: 'Trả lại ticket', value: 'refund_ticket' },
+        { text: 'Thu hoạch', value: 'reward_ticket' },
+        { text: 'Thuê đất', value: 'buy_ticket' },
+        { text: 'Huỷ hợp đồng', value: 'refund_ticket' },
       ],
       sorter: false,
       render: (userId, row: any) => (
         <div>
           {
-            row?.transaction_type === 'reward_ticket' && <Tag color='cyan-inverse'>Trả thưởng</Tag>
+            row?.transaction_type === 'reward_ticket' && <Tag color='orange-inverse'>Thu hoạch</Tag>
           }
           {
-            row?.transaction_type === 'buy_ticket' && <Tag color='green-inverse'>Mua ticket</Tag>
+            row?.transaction_type === 'buy_ticket' && <Tag color='green-inverse'>Thuê đất</Tag>
           }
           {
-            row?.transaction_type === 'refund_ticket' && <Tag color='geekblue-inverse'>Trả lại Ticket</Tag>
+            row?.transaction_type === 'refund_ticket' && <Tag color='red-inverse'>Huỷ hợp đồng</Tag>
           }
         </div>
       )
@@ -221,21 +221,21 @@ const Tickets = () => {
       dataIndex: 'transaction_status',
       filters: [
         { text: 'Hoàn thành', value: 'finish' },
-        { text: 'Đang chờ', value: 'processing' },
+        { text: 'Đang farm', value: 'processing' },
       ],
       align: 'center',
       sorter: false,
       render: (userId, row: any) => (
         <div className='flex flex-col gap-1'>
           {
-            row?.transaction_status === 'processing' && <Tag className='text-center' color='orange-inverse'>Đang earning</Tag>
+            row?.transaction_status === 'processing' && <Tag className='text-center' color='orange-inverse'>Đang farm</Tag>
           }
           {
-            row?.transaction_status === 'cancel' && <Tag className='text-center' color='red-inverse'>Đã huỷ</Tag>
+            row?.transaction_status === 'cancel' && <Tag className='text-center' color='red-inverse'>Huỷ</Tag>
           }
 
           {
-            row?.transaction_status === 'finish' && <Tag className='text-center' color='green-inverse'>Đã trả</Tag>
+            row?.transaction_status === 'finish' && <Tag className='text-center' color='green-inverse'>Hoàn thành</Tag>
           }
         </div>
       )
@@ -282,36 +282,41 @@ const Tickets = () => {
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
-      <div className='grid grid-cols-4 '>
-        <div className='my-4'>
-          <div className='flex gap-2 items-center'>
-            Tổng gói đầu tư:
-            <div className='font-[900]'>
-              {data?.countTicketProgress?.toLocaleString()}
+      <div className='grid grid-cols-2 sm:grid-cols-4 gap-4'>
+        <Card>
+          <div className='my-4'>
+            <div className='flex gap-2 items-center'>
+              Tổng gói đầu tư:
+              <div className='font-[900]'>
+                {data?.countTicketProgress?.toLocaleString()}
+              </div>
+            </div>
+            <div className='flex gap-2 items-center'>
+              Tổng gói đã trả:
+              <div className='font-[900]'>
+                {data?.countTicketFinish?.toLocaleString()}
+              </div>
             </div>
           </div>
-          <div className='flex gap-2 items-center'>
-            Tổng gói đã trả:
-            <div className='font-[900]'>
-              {data?.countTicketFinish?.toLocaleString()}
+        </Card>
+        <Card>
+          <div className='my-4'>
+            <div className='flex gap-2 items-center'>
+              Tổng gói kết thúc hôm nay:
+              <div className='font-[900]'>
+                {data?.countTicketFinishToday?.toLocaleString()}
+              </div>
+            </div>
+            <div className='flex gap-2 items-center'>
+              Tổng gói trả hôm nay:
+              <div className='font-[900]'>
+                {data?.totalEarnToday?.toLocaleString()}$
+              </div>
             </div>
           </div>
-        </div>
-        <div className='my-4'>
-          <div className='flex gap-2 items-center'>
-            Tổng gói kết thúc hôm nay:
-            <div className='font-[900]'>
-              {data?.countTicketFinishToday?.toLocaleString()}
-            </div>
-          </div>
-          <div className='flex gap-2 items-center'>
-            Tổng gói trả hôm nay:
-            <div className='font-[900]'>
-              {data?.totalEarnToday?.toLocaleString()}$
-            </div>
-          </div>
-        </div>
-     
+        </Card>
+
+
       </div>
       <ProTable
         columns={columns}
