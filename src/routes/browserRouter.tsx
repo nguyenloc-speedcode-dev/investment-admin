@@ -13,6 +13,7 @@ import About from '../components/demo-pages/about';
 import Setting from '../components/demo-pages/about';
 import UserDetail from '../components/users/user-detail';
 import Codes from '../components/codes';
+import Package from '../components/invest-pack';
 
 const errorElement = <ErrorPage />;
 const fallbackElement = <ProgressBar />;
@@ -23,6 +24,8 @@ const Dashboard = loadable(() => import('../components/dashboard'), {
 const Users = loadable(() => import('../components/users'), {
   fallback: fallbackElement,
 });
+
+
 
 const Deposits = loadable(() => import('../components/deposit'), {
   fallback: fallbackElement,
@@ -95,6 +98,10 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.setting,
         element: <Setting />,
+      },
+      {
+        path: webRoutes.pack,
+        element: <Package />,
       },
       {
         path: webRoutes.about,

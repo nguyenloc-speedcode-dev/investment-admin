@@ -15,6 +15,9 @@ export const apiRoutes = {
   updateConfig: `${API_URL}/admin/config`,
   logout: `${API_URL}/logout`,
   users: `${API_URL}/admin/users`,
+  packs: `${API_URL}/admin/invest-packs`,
+  updatePack: (id: string) => `${API_URL}/admin/invest-pack/${id}`,
+  createPack: `${API_URL}/admin/invest-pack`,
   reviews: `${API_URL}/unknown`,
   codes: `${API_URL}/admin/codes`,
   createCode: `${API_URL}/admin/code`

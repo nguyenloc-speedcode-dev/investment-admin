@@ -12,4 +12,5 @@ export const webRoutes = {
   codes: '/codes',
   about: '/about',
   userDetail: `/user-detail/:userId`,
+  pack:"/pack"
 };

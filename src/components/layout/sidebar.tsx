@@ -1,5 +1,5 @@
 import { webRoutes } from '../../routes/web';
-import { BiHomeAlt2 } from 'react-icons/bi';
+import { BiHomeAlt2, BiPackage } from 'react-icons/bi';
 import Icon, { UserOutlined, InfoCircleOutlined, HistoryOutlined, SettingOutlined } from '@ant-design/icons';
 import { CiMoneyCheck1 } from 'react-icons/ci';
 import RefIcon from '@ant-design/icons/lib/icons/AccountBookFilled';
@@ -16,6 +16,12 @@ export const sidebar = [
     key: webRoutes.users,
     name: 'Users',
     icon: <UserOutlined />,
+  },
+  {
+    path: webRoutes.pack,
+    key: webRoutes.pack,
+    name: 'Gói',
+    icon: <BiPackage />,
   },
   {
     path: webRoutes.deposit,

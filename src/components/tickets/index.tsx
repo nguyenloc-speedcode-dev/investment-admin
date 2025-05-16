@@ -74,7 +74,7 @@ const Tickets = () => {
       sorter: false,
       render: (userId, row: any) => (
         <div className='flex flex-col gap-1'>
-          <img src={`https://api.rich-farmer.online${row?.ticket?.urlImage}`} width={70} className='m-auto' />
+          <img src={row?.ticket?.urlImage} width={70} className='m-auto' />
           {
             row?.transaction_type === "reward_ticket" &&
 
