@@ -35,6 +35,7 @@ const Setting = () => {
         value
       })
       setCallBack(!callBack)
+      message.success("Change success")
     } catch (error: any) {
       message.error(error?.response?.data?.message)
     }
@@ -97,67 +98,96 @@ const Setting = () => {
                   <hr className='my-4' />
 
                   <h1 className='my-2 font-[500] mb-3'>Cài đặt CSKH</h1>
-                  <a className='text-blue-700' href={"#"} target='_blank'>{config?.LIVECHAT_ID}</a>
-                  <Form className='mt-5' onFinish={async (form) => {
-                    handleUpdateConfig("LIVECHAT_ID", form?.value)
-                  }}>
-                    <Form.Item name="value" >
-                      <Input placeholder='Nhập link CSKH' />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button htmlType='submit'>Thay đổi</Button>
-                    </Form.Item>
-                  </Form>
+
+                  {
+                    config?.LIVECHAT_ID &&
+                    <Form
+                      initialValues={{ value: config?.LIVECHAT_ID }}
+                      className='mt-5' onFinish={async (form) => {
+                        handleUpdateConfig("LIVECHAT_ID", form?.value)
+                      }}>
+                      <Form.Item name="value" >
+                        <Input placeholder='Nhập link CSKH' />
+                      </Form.Item>
+                      <Form.Item>
+                        <Button htmlType='submit'>Thay đổi</Button>
+                      </Form.Item>
+                    </Form>
+                  }
+
                   <hr className='my-4' />
 
                   <h1 className='my-2 font-[500] mb-3'>Cài đặt giá USDT</h1>
-                  <div className='text-gray-800' >{Number(config?.USDT_PRICE)}</div>
-                  <Form className='mt-5' onFinish={async (form) => {
-                    handleUpdateConfig("USDT_PRICE", form?.value)
-                  }}>
-                    <Form.Item name="value" >
-                      <Input placeholder='Nhập nội dung' type='number' />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button htmlType='submit'>Thay đổi</Button>
-                    </Form.Item>
-                  </Form>
+
+                  {
+                    config?.USDT_PRICE &&
+                    <Form className='mt-5'
+                      initialValues={{ value: config?.USDT_PRICE }}
+                      onFinish={async (form) => {
+                        handleUpdateConfig("USDT_PRICE", form?.value)
+                      }}>
+                      <Form.Item name="value" >
+                        <Input placeholder='Nhập nội dung' type='number' />
+                      </Form.Item>
+                      <Form.Item>
+                        <Button htmlType='submit'>Thay đổi</Button>
+                      </Form.Item>
+                    </Form>
+                  }
+
+
+                  <hr className='my-4' />
+
+                  <h1 className='my-2 font-[500] mb-3'>Cài đặt thông báo trang chủ</h1>
+                  {
+                    config?.HOME_NOTIFICATION &&
+                    <Form className='mt-5' onFinish={async (form) => {
+                      handleUpdateConfig("HOME_NOTIFICATION", JSON.stringify(form))
+                    }} initialValues={JSON.parse(config?.HOME_NOTIFICATION)}>
+                      <Form.Item name="en" >
+                        <Input placeholder='Nhập nội dung tiếng anh' />
+                      </Form.Item>
+                      <Form.Item name="vi" >
+                        <Input placeholder='Nhập nội dung tiếng việt' />
+                      </Form.Item>
+                      <Form.Item name="zh" >
+                        <Input placeholder='Nhập nội dung tiếng trung' />
+                      </Form.Item>
+                      <Form.Item>
+                        <Button htmlType='submit'>Thay đổi</Button>
+                      </Form.Item>
+                    </Form>
+                  }
+
 
                 </div>
               </div>
               <div className="group relative rounded-xl border border-slate-200 p-4">
                 <h1 className='my-2 font-[500]'>Cài đặt tài khoản thanh toán banking</h1>
+                {
+                  config?.PAYMENT_GATEWAY &&
+                  <Form className='mt-5' onFinish={async (form) => {
+                    handleUpdateConfig("PAYMENT_GATEWAY", JSON.stringify(form))
+                  }} initialValues={paymentGateway}>
 
-                <div>
-                  Tên Chủ Thẻ :  {paymentGateway?.holderName}
-                </div>
-                <div>
-                  STK :  {paymentGateway?.numberBank}
-                </div>
-                <div >
-                  Tên ngân hàng :  {paymentGateway?.nameBank}
-                </div>
+                    <Form.Item name="holderName" >
+                      <Input placeholder='Tên chủ thẻ' />
+                    </Form.Item>
+                    <Form.Item name="nameBank" >
+                      <Input placeholder='Tên ngân hàng' />
+                    </Form.Item>
+                    <Form.Item name="numberBank" >
+                      <Input placeholder='Số tài khoản' />
+                    </Form.Item>
+                    <Form.Item name="code" >
+                      <Input placeholder='Code ngân hàng' />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button htmlType='submit'>Thay đổi</Button>
+                    </Form.Item>
+                  </Form>
+                }
 
-                <Form className='mt-5' onFinish={async (form) => {
-                  handleUpdateConfig("PAYMENT_GATEWAY", JSON.stringify(form))
-                }}>
-
-                  <Form.Item name="holderName" >
-                    <Input placeholder='Tên chủ thẻ' />
-                  </Form.Item>
-                  <Form.Item name="nameBank" >
-                    <Input placeholder='Tên ngân hàng' />
-                  </Form.Item>
-                  <Form.Item name="numberBank" >
-                    <Input placeholder='Số tài khoản' />
-                  </Form.Item>
-                  <Form.Item name="code" >
-                    <Input placeholder='Code ngân hàng' />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button htmlType='submit'>Thay đổi</Button>
-                  </Form.Item>
-                </Form>
                 <hr className='my-4' />
 
                 <h1 className='my-2 font-[500] mb-3'>Cài đặt phí rút</h1>

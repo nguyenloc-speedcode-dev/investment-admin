@@ -286,11 +286,68 @@ const UserDetail = () => {
               <h2>Số dư:</h2>
               <h3 className='font-[700]'> {detail?.realBalance?.toLocaleString()}</h3>
             </div>
-            <div className='flex justify-between items-center' >
+            <div className='flex justify-between items-center mb-3' >
               <h2>Khoá/Mở tài khoản</h2>
-              <Switch style={{
-                backgroundColor:'#cccc'
-              }} checkedChildren="Khoá " unCheckedChildren="Mở"/>
+              <Switch
+                onChange={async (value) => {
+                  try {
+                    const res = await http.post(apiRoutes.updateUser, {
+                      userId: detail?._id,
+                      updateType: 'blockUser',
+                      isBlock: value
+                    })
+                    if (res && res.data) {
+                      message.success("Cập nhật tin thành công")
+                      getUserDetail()
+                    }
+                  } catch (error: any) {
+                    message.error(error?.response?.data?.message || "Thử lại sau")
+                  }
+                }}
+
+                checked={detail?.status} checkedChildren="Khoá " unCheckedChildren="Mở" />
+            </div>
+            <div className='flex justify-between items-center mb-3' >
+              <h2>Tk Tester</h2>
+              <Switch
+                onChange={async (value) => {
+                  try {
+                    const res = await http.post(apiRoutes.updateUser, {
+                      userId: detail?._id,
+                      updateType: 'change_tester',
+                      isAccountForAdmin: value
+                    })
+                    if (res && res.data) {
+                      message.success("Cập nhật tin thành công")
+                      getUserDetail()
+                    }
+                  } catch (error: any) {
+                    message.error(error?.response?.data?.message || "Thử lại sau")
+                  }
+                }}
+
+                checked={detail?.isAccountForAdmin} checkedChildren="Khoá " unCheckedChildren="Mở" />
+            </div>
+            <div className='flex justify-between items-center' >
+              <h2>Thêm Blacklist</h2>
+              <Switch
+                onChange={async (value) => {
+                  try {
+                    const res = await http.post(apiRoutes.updateUser, {
+                      userId: detail?._id,
+                      updateType: 'blockUser',
+                      isBlackList: value
+                    })
+                    if (res && res.data) {
+                      message.success("Cập nhật tin thành công")
+                      getUserDetail()
+                    }
+                  } catch (error: any) {
+                    message.error(error?.response?.data?.message || "Thử lại sau")
+                  }
+                }}
+
+                checked={detail?.isBlackList} checkedChildren="Khoá " unCheckedChildren="Mở" />
             </div>
           </Card>
         </Col>
@@ -443,17 +500,17 @@ const UserDetail = () => {
                       <Input disabled />
                     </Form.Item>
                   </Col>
-                  
+
                   <Col xs={24} lg={6}>
                     <Form.Item name="vip" label="Cấp Đại Lý">
-                        <Input disabled />
+                      <Input disabled />
                     </Form.Item>
                   </Col>
-                    <Col xs={24} lg={6}>
-                      <Form.Item name="farmVip" label="Level Trang Trại">
-                        <Input disabled />
-                      </Form.Item>
-                    </Col>
+                  <Col xs={24} lg={6}>
+                    <Form.Item name="farmVip" label="Level Trang Trại">
+                      <Input disabled />
+                    </Form.Item>
+                  </Col>
                   <Col xs={24} lg={6}>
                     <Form.Item name="userName" label="Tên tài khoản">
                       <Input disabled />
@@ -465,11 +522,11 @@ const UserDetail = () => {
                       <Input disabled />
                     </Form.Item>
                   </Col>
-                    <Col xs={24} lg={6}>
-                      <Form.Item name="inviteCode" label="Nhập mã mời">
-                        <Input />
-                      </Form.Item>
-                    </Col>
+                  <Col xs={24} lg={6}>
+                    <Form.Item name="inviteCode" label="Nhập mã mời">
+                      <Input />
+                    </Form.Item>
+                  </Col>
                   <Col xs={24} lg={6}>
                     <Form.Item name="password" label="Mật khẩu đăng nhập"
 
