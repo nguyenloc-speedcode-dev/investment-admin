@@ -20,5 +20,10 @@ export const apiRoutes = {
   createPack: `${API_URL}/admin/invest-pack`,
   reviews: `${API_URL}/unknown`,
   codes: `${API_URL}/admin/codes`,
-  createCode: `${API_URL}/admin/code`
+  createCode: `${API_URL}/admin/code`,
+  sendMessageBotGroup: `${API_URL}/admin/send-message-bot`,
+  createEvent: `${API_URL}/admin/event`,
+  updateEvent: (id: string) => `${API_URL}/admin/event/${id}`,
+  deleteEvent: (id: string) => `${API_URL}/admin/event/${id}`,
+  getEvents: `${API_URL}/admin/events`
 };

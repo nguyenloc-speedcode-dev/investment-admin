@@ -113,15 +113,17 @@ const HistoryUser = () => {
               </div>
               <div className='flex gap-2'>
                 <label>Số lượng ($):</label>
-                <div>{row?.value}$ </div>
+                <div className='font-[900]'>{Number(row?.value?.toFixed(5))}$ </div>
               </div>
               <div className='flex gap-2'>
-                <label>Số tiền (vnđ):</label>
-                <div>{row?.fiat_amount?.toLocaleString()} vnđ </div>
+                <label>Số tiền :</label>
+                <div>{bankInfo?.nameBank === 'BEP20' ?
+                  row?.fiat_amount + "$"
+                  : Number(row?.fiat_amount?.toFixed(0)) + "vnđ"}  </div>
               </div>
               <div className='flex gap-2'>
                 <label>Biến động (vnđ):</label>
-                <div>{row?.currentBalanceUser}$</div>
+                <div className='font-[900]'>{Number(row?.currentBalanceUser?.toFixed(4))}$</div>
               </div>
             </div>
           )
@@ -135,7 +137,7 @@ const HistoryUser = () => {
               </div>
               <div className='flex gap-2'>
                 <label>Số lượng ($):</label>
-                <div>{row?.value}$ </div>
+                <div className='font-[900]'>{Number(row?.value?.toFixed(5))}$ </div>
               </div>
               <div className='flex gap-2'>
                 <label>Số tiền (vnđ):</label>
@@ -143,7 +145,7 @@ const HistoryUser = () => {
               </div>
               <div className='flex gap-2'>
                 <label>Biến động (vnđ):</label>
-                <div>{row?.currentBalanceUser}$</div>
+                <div className='font-[900]'>{Number(row?.currentBalanceUser?.toFixed(4))}$</div>
               </div>
             </div>
           )
@@ -156,7 +158,7 @@ const HistoryUser = () => {
               </div>
               <div className='flex gap-2'>
                 <label>Số lượng ($):</label>
-                <div>{row?.value}$ </div>
+                <div className='font-[900]'>{Number(row?.value?.toFixed(5))}$ </div>
               </div>
               <div className='flex gap-2'>
                 <label>Số tiền (vnđ):</label>
@@ -164,7 +166,7 @@ const HistoryUser = () => {
               </div>
               <div className='flex gap-2'>
                 <label>Biến động :</label>
-                <div>{row?.currentBalanceUser || "-"}$</div>
+                <div className='font-[900]'>{Number(row?.currentBalanceUser?.toFixed(4))}$</div>
               </div>
               <div className='flex gap-2'>
                 <label>Số lần checkin :</label>

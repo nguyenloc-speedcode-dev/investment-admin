@@ -14,6 +14,7 @@ import Setting from '../components/demo-pages/about';
 import UserDetail from '../components/users/user-detail';
 import Codes from '../components/codes';
 import Package from '../components/invest-pack';
+import Event from '../components/event/Event';
 
 const errorElement = <ErrorPage />;
 const fallbackElement = <ProgressBar />;
@@ -98,6 +99,10 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.setting,
         element: <Setting />,
+      },
+      {
+        path: webRoutes.event,
+        element: <Event />,
       },
       {
         path: webRoutes.pack,

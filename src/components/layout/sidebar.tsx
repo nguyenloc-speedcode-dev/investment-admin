@@ -3,6 +3,7 @@ import { BiHomeAlt2, BiPackage } from 'react-icons/bi';
 import Icon, { UserOutlined, InfoCircleOutlined, HistoryOutlined, SettingOutlined } from '@ant-design/icons';
 import { CiMoneyCheck1 } from 'react-icons/ci';
 import RefIcon from '@ant-design/icons/lib/icons/AccountBookFilled';
+import { MdEvent } from 'react-icons/md';
 
 export const sidebar = [
   {
@@ -22,6 +23,12 @@ export const sidebar = [
     key: webRoutes.pack,
     name: 'Gói',
     icon: <BiPackage />,
+  },
+  {
+    path: webRoutes.event,
+    key: webRoutes.event,
+    name: 'Sự kiện',
+    icon: <MdEvent/>,
   },
   {
     path: webRoutes.deposit,

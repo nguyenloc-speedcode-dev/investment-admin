@@ -79,7 +79,7 @@ const Tickets = () => {
             row?.transaction_type === "reward_ticket" &&
 
             <div className='font-[700] text-green-700'>
-              + {row?.value} $
+                + {Number(row?.value?.toFixed(5))} $
             </div>
           }
           <div>
@@ -114,8 +114,8 @@ const Tickets = () => {
             <label>Số dư:</label>
             <div style={{
               color: row?.user?.realBalance >= 5 ? "red" : "#000",
-              fontWeight: 600
-            }}>{row?.user?.realBalance?.toLocaleString()}</div>
+              fontWeight: 700
+            }} >{ Number(row?.user?.realBalance?.toFixed(5))}</div>
           </div>
           <div className='flex gap-2'>
             <label>Ngày giao dịch:</label>
@@ -135,7 +135,7 @@ const Tickets = () => {
 
             <div className='flex gap-2'>
               <label>Số lượng ($):</label>
-              <div>{row?.value}$ </div>
+              <div className='font-[900]'>{Number(row?.value?.toFixed(5))}$ </div>
             </div>
             <div className='flex gap-2'>
               <label>Số tiền (vnđ):</label>
@@ -143,7 +143,7 @@ const Tickets = () => {
             </div>
             <div className='flex gap-2'>
               <label>Biến động:</label>
-              <div>{row?.currentBalanceUser}$</div>
+              <div className='font-[900]'>{Number(row?.currentBalanceUser?.toFixed(4))}$</div>
             </div>
           </div>
         )

@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import http from '../../utils/http';
 import { apiRoutes } from '../../routes/api';
 import TextArea from 'antd/es/input/TextArea';
+import TelegramBotForm from './TeleGramBotForm';
 
 const breadcrumb: BreadcrumbProps = {
   items: [
@@ -95,8 +96,18 @@ const Setting = () => {
                       handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT_BANKING", checked ? "0" : "1")
                     }} /></div>
                   </div>
+                  <div className='flex gap-2 items-center mb-3'>
+                    <div>Bật/Tắt Nạp Crypto :</div>
+                    <div><Switch checked={config?.PAYMENT_MAINTENANCE_DEPOSIT_CRYPTO === '0'} onChange={async (checked: boolean) => {
+                      handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT_CRYPTO", checked ? "0" : "1")
+                    }} /></div>
+                  </div>
                   <hr className='my-4' />
 
+
+                  <h1 className='my-2 font-[500] mb-3'>Gửi tin nhắn bot tele</h1>
+
+                  <TelegramBotForm />
                   <h1 className='my-2 font-[500] mb-3'>Cài đặt CSKH</h1>
 
                   {
@@ -181,6 +192,23 @@ const Setting = () => {
                     </Form.Item>
                     <Form.Item name="code" >
                       <Input placeholder='Code ngân hàng' />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button htmlType='submit'>Thay đổi</Button>
+                    </Form.Item>
+                  </Form>
+                }
+
+                <hr className='my-4' />
+
+                <h1 className='my-2 font-[500] mb-3'>Địa chỉ ví</h1>
+                {
+                  config?.BEP20_ADDRESS &&
+                  <Form initialValues={{ value: config?.BEP20_ADDRESS }} className='mt-5' onFinish={async (form) => {
+                    handleUpdateConfig("BEP20_ADDRESS", form?.value)
+                  }}>
+                    <Form.Item name="value" >
+                      <Input placeholder='Nhập địa chỉ ví bep20 0x....' />
                     </Form.Item>
                     <Form.Item>
                       <Button htmlType='submit'>Thay đổi</Button>

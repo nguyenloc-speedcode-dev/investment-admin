@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { User } from '../../interfaces/models/user';
 import { apiRoutes } from '../../routes/api';
 import { webRoutes } from '../../routes/web';
+import QRCode from 'react-qr-code'
 import {
   handleErrorResponse,
   NotificationType,
@@ -91,7 +92,7 @@ const Withdraw = () => {
       dataIndex: 'phone',
       align: 'center',
       sorter: false,
-      render: (userId, row: any) =>{
+      render: (userId, row: any) => {
         const bankInfo = row && JSON.parse(row?.paymentMethod || "{}")
         return (
           <div className='flex flex-col gap-1'>
@@ -112,16 +113,43 @@ const Withdraw = () => {
               <div>{row?.value}$ </div>
             </div>
             <div className='flex gap-2'>
-              <label>Số tiền (vnđ):</label>
-              <div>{row?.fiat_amount?.toLocaleString()} vnđ </div>
+              <label>Số tiền :</label>
+              <div>{bankInfo?.nameBank === 'BEP20' ?
+                row?.fiat_amount + "$"
+                : Number(row?.fiat_amount?.toFixed(0)) + "vnđ"}  </div>
             </div>
             <div className='flex gap-2'>
               <label>Biến động :</label>
-              <div>{row?.currentBalanceUser}$</div>
+              <div>{Number(row?.currentBalanceUser?.toFixed(3))}$</div>
             </div>
           </div>
         )
-      } 
+      }
+    },
+    {
+      title: 'Thông tin',
+      dataIndex: 'phone',
+      align: 'center',
+      sorter: false,
+      render: (userId, row: any) => {
+        const bankInfo = row && JSON.parse(row?.paymentMethod || "{}")
+        if (bankInfo?.nameBank !== 'BEP20')
+          return (
+            <div className='w-[300px]'>
+              <img src={`https://img.vietqr.io/image/${bankInfo?.nameBank}-${bankInfo?.numberBank}-compact2.png?amount=${Number(row?.fiat_amount?.toFixed(0))}&accountName=${bankInfo.holderName}`} width={250} />
+            </div>
+          )
+        return (
+          <div className='w-[150px]'>
+            <QRCode
+              size={150}
+              style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+              value={`${bankInfo?.numberBank}`}
+              viewBox={`0 0 150 150`}
+            />
+          </div>
+        )
+      }
     },
     {
       title: 'Trạng thái',
@@ -182,7 +210,7 @@ const Withdraw = () => {
                 </Space>
               ),
             },
-           
+
           ]}
         >
           <Icon component={CiCircleMore} className="text-primary text-xl" />
