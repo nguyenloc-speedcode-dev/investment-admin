@@ -138,7 +138,7 @@ const Setting = () => {
                         handleUpdateConfig("USDT_PRICE", form?.value)
                       }}>
                       <Form.Item name="value" >
-                        <Input placeholder='Nhập nội dung' type='number' />
+                          <Input placeholder='Nhập nội dung' type='number' addonAfter="VNĐ" />
                       </Form.Item>
                       <Form.Item>
                         <Button htmlType='submit'>Thay đổi</Button>
@@ -219,17 +219,22 @@ const Setting = () => {
                 <hr className='my-4' />
 
                 <h1 className='my-2 font-[500] mb-3'>Cài đặt phí rút</h1>
-                <div className='text-gray-800' >{config?.FEE_WIDTHDRAW}%</div>
-                <Form className='mt-5' onFinish={async (form) => {
-                  handleUpdateConfig("FEE_WIDTHDRAW", form?.value)
-                }}>
-                  <Form.Item name="value" >
-                    <Input placeholder='Nhập nội dung' type='number' />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button htmlType='submit'>Thay đổi</Button>
-                  </Form.Item>
-                </Form>
+               {
+                  config?.FEE_WIDTHDRAW &&
+                  <Form className='mt-5'
+                      initialValues={{ value: config?.FEE_WIDTHDRAW }}
+                  onFinish={async (form) => {
+                    handleUpdateConfig("FEE_WIDTHDRAW", form?.value)
+                  }}>
+                    <Form.Item name="value" >
+                        <Input placeholder='Nhập nội dung' type='number' addonAfter="%" />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button htmlType='submit'>Thay đổi</Button>
+                    </Form.Item>
+                  </Form>
+               }
+                
 
               </div>
 
