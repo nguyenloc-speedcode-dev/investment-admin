@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prettier/prettier */
 import {
   ActionType,
   ProTable,
@@ -53,152 +55,103 @@ const Users = () => {
 
   const [realBalance, setRealbalance] = useState<number | null>(null);
 
+  const FieldRow = ({ label, value, valueClassName = "" }: { label: string; value: React.ReactNode; valueClassName?: string }) => (
+    <div className="flex gap-2 items-center">
+      <label className="font-semibold whitespace-nowrap">{label}:</label>
+      <div className={`truncate ${valueClassName}`} title={typeof value === 'string' ? value : undefined}>
+        {value ?? "-"}
+      </div>
+    </div>
+  );
 
   const columns: ProColumns[] = [
     {
-      title: 'User ID',
+      title: 'User Info',
       dataIndex: 'userId',
       align: 'center',
-      sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          <div className='flex gap-2'>
-            <label>User ID:</label>
-            <div>{row?.userId}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>User Name:</label>
-            <div>{row?.userName}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Ref Code:</label>
-            <div>{row?.refCode}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Invite Code:</label>
-            <div>{row?.inviteCode || "-"}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số người mời:</label>
-            <div>{row?.inviteUser?.length || "-"}</div>
-          </div>
+      render: (_, row: any) => (
+        <div className="flex flex-col gap-1 max-w-[200px]">
+          <FieldRow label="User ID" value={row?.userId} />
+          <FieldRow label="User Name" value={row?.userName} />
+          <FieldRow label="Ref Code" value={row?.refCode} />
+          <FieldRow label="Invite Code" value={row?.inviteCode || "-"} />
+          <FieldRow label="Số người mời" value={row?.inviteUser?.length || "-"} />
         </div>
-      )
+      ),
     },
     {
       title: 'Tài khoản',
       dataIndex: 'phone',
       align: 'center',
-      sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          <div className='flex gap-2'>
-            <label>SĐT:</label>
-            <div>{row?.phone}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Đại lý:</label>
-            <div>{row?.vip}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>VIP:</label>
-            <div>{row?.farmVip}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Mật khẩu:</label>
-            <div>{row?.password}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Ngày tạo:</label>
-            <div>{new Date(row?.createdAt)?.toLocaleString()}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>IP:</label>
-            <div className='font-[500]'>{row?.registerIp}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>DeviceId:</label>
-            <div className='font-[500]'>{row?.uuid}</div>
-          </div>
+      render: (_, row: any) => (
+        <div className="flex flex-col gap-1 max-w-[220px]">
+          <FieldRow label="SĐT" value={row?.phone} />
+          <FieldRow label="Đại lý" value={row?.vip} />
+          <FieldRow label="VIP" value={row?.farmVip} />
+          <FieldRow label="Mật khẩu" value={row?.password} />
+          <FieldRow label="Ngày tạo" value={row?.createdAt ? new Date(row.createdAt).toLocaleString() : "-"} />
+          <FieldRow label="IP" value={row?.registerIp} valueClassName="font-medium" />
+          <FieldRow label="DeviceId" value={row?.uuid} valueClassName="font-medium" />
         </div>
-      )
+      ),
     },
     {
       title: 'Ví',
-      dataIndex: 'phone',
+      dataIndex: 'realBalance',
       align: 'center',
-      sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          <div className='flex gap-2'>
-            <label>Số dư:</label>
-            <div style={{
-              color: row?.realBalance >= 5 ? "red" : "#000",
-              fontWeight: 600
-            }}>{row?.realBalance?.toLocaleString()}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Mật khẩu ví:</label>
-            <div>{row?.payment_password}</div>
-          </div>
-
+      render: (_, row: any) => (
+        <div className="flex flex-col gap-1 max-w-[180px]">
+          <FieldRow
+            label="Số dư"
+            value={row?.realBalance?.toLocaleString()}
+            valueClassName={row?.realBalance >= 5 ? "text-red-600 font-bold" : "font-semibold"}
+          />
+          <FieldRow label="Mật khẩu ví" value={row?.payment_password} />
         </div>
-      )
+      ),
     },
     {
       title: 'Hoạt động',
-      dataIndex: 'phone',
+      dataIndex: 'activity',
       align: 'center',
-      sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          <div className='flex gap-2' >
-            <label>Số Vòng Quay:</label>
-            <div>{row?.drawNum}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số Ngày Checkin:</label>
-            <div>{row?.checkInToday}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số Ticker:</label>
-            <div>{row?.duckSticker}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số Lần tìm kho báu:</label>
-            <div>{row?.mineNum}</div>
-          </div>
+      render: (_, row: any) => (
+        <div className="flex flex-col gap-1 max-w-[200px]">
+          <FieldRow label="Số Vòng Quay" value={row?.drawNum} />
+          <FieldRow label="Số Ngày Checkin" value={row?.checkInToday} />
+          <FieldRow label="Số Ticker" value={row?.duckSticker} />
+          <FieldRow label="Số Lần tìm kho báu" value={row?.mineNum} />
         </div>
-
-      )
+      ),
     },
     {
       title: 'Action',
       align: 'center',
-      key: 'option',
       fixed: 'right',
-      render: (_, row: any) => {
-        return (
-          <div className='flex justify-center'>
-            {
-              row?.roles?.[0]?.code === 'USER' ?
-                <Link to={`/user-detail/${row?._id}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                  </svg>
-                </Link>
-                :
-                <h3 className='text-red-600 font-[900]'>ADMIN</h3>
-            }
-
-
-          </div>
-
-
-        )
-      }
+      render: (_, row: any) => (
+        <div className="flex justify-center">
+          {row?.roles?.[0]?.code === 'USER' ? (
+            <Link to={`/user-detail/${row?._id}`} className="text-green-600 hover:text-green-800">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6 cursor-pointer"
+                aria-label="View details"
+                role="img"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+              </svg>
+            </Link>
+          ) : (
+            <span className="text-red-600 font-bold">ADMIN</span>
+          )}
+        </div>
+      ),
     },
   ];
+
 
   const handleActionOnSelect = (key: string, user: User) => {
     if (key === 'delete') {

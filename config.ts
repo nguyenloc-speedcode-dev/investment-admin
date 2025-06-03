@@ -11,14 +11,13 @@ const CONFIG = {
   helpLink: 'https://github.com/arifszn/reforge',
   enablePWA: true,
   theme: {
-    accentColor: '#818cf8',
-    sidebarLayout: LayoutType.MIX,
+    accentColor: '#1bb757',
+    sidebarLayout: LayoutType.SIDE,
     showBreadcrumb: true,
   },
   metaTags: {
     title: 'Investment',
-    description:
-      'An out-of-box UI solution for enterprise applications as a React boilerplate.',
+    description: 'Quản lý thông tin dự án game',
     imageURL: 'logo.svg',
   },
 };

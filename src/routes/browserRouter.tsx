@@ -15,6 +15,7 @@ import UserDetail from '../components/users/user-detail';
 import Codes from '../components/codes';
 import Package from '../components/invest-pack';
 import Event from '../components/event/Event';
+import Wallet from '../components/wallet/Wallet';
 
 const errorElement = <ErrorPage />;
 const fallbackElement = <ProgressBar />;
@@ -103,6 +104,10 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.event,
         element: <Event />,
+      },
+      {
+        path: webRoutes.wallet,
+        element: <Wallet />,
       },
       {
         path: webRoutes.pack,

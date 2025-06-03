@@ -44,13 +44,13 @@ const Event = () => {
             }
         } catch (err) {
             console.log(err);
-            
+
             message.error(editItem ? 'Cập nhật thất bại!' : 'Tạo event thất bại!');
         } finally {
             setLoading(false);
         }
     };
-    
+
 
     const columns: ProColumns<any>[] = [
         {
@@ -118,7 +118,7 @@ const Event = () => {
                 </div>
             ),
         },
-        
+
         {
             title: 'Tạo lúc',
             dataIndex: 'createdAt',
@@ -144,7 +144,7 @@ const Event = () => {
                 </Button>
             ),
         },
-          
+
     ];
 
 
@@ -162,7 +162,7 @@ const Event = () => {
                     setOpenModal(false);
                     setEditItem(null);
                     form.resetFields();
-                  }}
+                }}
                 footer={null}
             >
                 <Form form={form} onFinish={onFinish} layout="vertical">

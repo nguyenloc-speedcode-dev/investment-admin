@@ -1,6 +1,6 @@
 import { webRoutes } from '../../routes/web';
 import { BiHomeAlt2, BiPackage } from 'react-icons/bi';
-import Icon, { UserOutlined, InfoCircleOutlined, HistoryOutlined, SettingOutlined } from '@ant-design/icons';
+import Icon, { UserOutlined, PayCircleOutlined, HistoryOutlined, SettingOutlined } from '@ant-design/icons';
 import { CiMoneyCheck1 } from 'react-icons/ci';
 import RefIcon from '@ant-design/icons/lib/icons/AccountBookFilled';
 import { MdEvent } from 'react-icons/md';
@@ -28,13 +28,19 @@ export const sidebar = [
     path: webRoutes.event,
     key: webRoutes.event,
     name: 'Sự kiện',
-    icon: <MdEvent/>,
+    icon: <MdEvent />,
   },
   {
     path: webRoutes.deposit,
     key: webRoutes.deposit,
     name: 'Nạp tiền',
     icon: <CiMoneyCheck1 />,
+  },
+  {
+    path: webRoutes.wallet,
+    key: webRoutes.wallet,
+    name: 'BEP20 Method',
+    icon: <PayCircleOutlined />,
   },
   {
     path: webRoutes.withdraw,

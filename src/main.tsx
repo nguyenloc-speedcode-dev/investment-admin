@@ -9,6 +9,7 @@ import Loader from './components/loader';
 import { store } from './store';
 import { injectStore } from './utils/http';
 import App from './App';
+
 import './index.css';
 
 const persistor = persistStore(store);

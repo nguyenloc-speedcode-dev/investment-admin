@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prettier/prettier */
 import {
   ActionType,
   ProTable,
@@ -6,7 +8,7 @@ import {
   TableDropdown,
   ProDescriptions,
 } from '@ant-design/pro-components';
-import { Avatar, BreadcrumbProps, Card, Modal, Space, Tag } from 'antd';
+import { Avatar, BreadcrumbProps, Card, Image, Modal, Space, Tag, Tooltip, Typography } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
@@ -66,131 +68,139 @@ const Tickets = () => {
     getData()
   }, [])
 
+
+  const { Text, Title } = Typography;
+
+  const moneyFormat = (val?: number, decimals = 5) => {
+    if (typeof val !== 'number') return '-';
+    return val.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+  };
+
   const columns: ProColumns[] = [
     {
-      title: 'User ID',
-      dataIndex: 'userId',
+      title: 'Ảnh & Thu hoạch',
+      dataIndex: 'ticketImage',
       align: 'center',
       sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          <img src={row?.ticket?.urlImage} width={70} className='m-auto' />
-          {
-            row?.transaction_type === "reward_ticket" &&
-
-            <div className='font-[700] text-green-700'>
-                + {Number(row?.value?.toFixed(5))} $
-            </div>
-          }
-          <div>
-          </div>
-        </div>
-      )
+      render: (_, row: any) => (
+        <Space direction="vertical" size={4} align="center" style={{ width: '100%' }}>
+          <Image
+            src={row?.ticket?.urlImage}
+            width={70}
+            style={{ borderRadius: 8, boxShadow: '0 2px 6px rgba(0,0,0,0.1)' }}
+            preview={false}
+            alt="Ticket"
+            fallback="/default-image.png"
+          />
+          {row?.transaction_type === "reward_ticket" && (
+            <Text strong type="success">+{moneyFormat(row?.value)} $</Text>
+          )}
+          {row?.transaction_type === "buy_ticket" && (
+            <Text strong type="warning">Mới mua</Text>
+          )}
+          {row?.transaction_type === "refund_ticket" && (
+            <Text strong type="danger">Hết giờ</Text>
+          )}
+        </Space>
+      ),
     },
     {
-      title: 'User ID',
-      dataIndex: 'userId',
-      align: 'center',
+      title: 'Thông tin giao dịch',
+      dataIndex: 'transactionInfo',
+      align: 'left',
       sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          <div className='flex gap-2'>
-            <label>ID GD:</label>
-            <div className='font-[700]'>{row?._id}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>User ID:</label>
-            <div>{row?.user?.userId}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>SĐT:</label>
-            <div>{row?.user?.phone}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>IP:</label>
-            <div className='font-[500]'>{row?.user?.registerIp}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số dư:</label>
-            <div style={{
-              color: row?.user?.realBalance >= 5 ? "red" : "#000",
-              fontWeight: 700
-            }} >{ Number(row?.user?.realBalance?.toFixed(5))}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Ngày giao dịch:</label>
-            <div>{new Date(row?.createdAt)?.toLocaleString()}</div>
-          </div>
-        </div>
-      )
+      render: (_, row: any) => (
+        <Space direction="vertical" size={6} style={{ width: '100%' }}>
+          <Space>
+            <Text strong>ID GD:</Text>
+            <Text code>{row?._id || '-'}</Text>
+          </Space>
+          <Space>
+            <Text strong>User ID:</Text>
+            <Text ellipsis style={{ maxWidth: 150 }}>{row?.user?.userId || '-'}</Text>
+          </Space>
+          <Space>
+            <Text strong>SĐT:</Text>
+            <Text>{row?.user?.phone || '-'}</Text>
+          </Space>
+          <Space>
+            <Text strong>IP:</Text>
+            <Tooltip title={row?.user?.registerIp || '-'}>
+              <Text ellipsis style={{ maxWidth: 140 }}>{row?.user?.registerIp || '-'}</Text>
+            </Tooltip>
+          </Space>
+          <Space>
+            <Text strong>Số dư:</Text>
+            <Text strong style={{ color: row?.user?.realBalance >= 5 ? 'red' : 'inherit' }}>
+              {moneyFormat(row?.user?.realBalance)}
+            </Text>
+          </Space>
+          <Space>
+            <Text strong>Ngày GD:</Text>
+            <Text>{row?.createdAt ? new Date(row.createdAt).toLocaleString() : '-'}</Text>
+          </Space>
+        </Space>
+      ),
     },
     {
-      title: 'Thông tin',
-      dataIndex: 'phone',
-      align: 'center',
+      title: 'Chi tiết thanh toán',
+      dataIndex: 'paymentInfo',
+      align: 'left',
       sorter: false,
-      render: (userId, row: any) => {
-        return (
-          <div className='flex flex-col gap-1'>
-
-            <div className='flex gap-2'>
-              <label>Số lượng ($):</label>
-              <div className='font-[900]'>{Number(row?.value?.toFixed(5))}$ </div>
-            </div>
-            <div className='flex gap-2'>
-              <label>Số tiền (vnđ):</label>
-              <div>{row?.fiat_amount?.toLocaleString()} vnđ </div>
-            </div>
-            <div className='flex gap-2'>
-              <label>Biến động:</label>
-              <div className='font-[900]'>{Number(row?.currentBalanceUser?.toFixed(4))}$</div>
-            </div>
-          </div>
-        )
-
-      }
-
+      render: (_, row: any) => (
+        <Space direction="vertical" size={6} style={{ width: '100%' }}>
+          <Space>
+            <Text strong>Số lượng ($):</Text>
+            <Text strong>{moneyFormat(row?.value)}$</Text>
+          </Space>
+          <Space>
+            <Text strong>Số tiền (vnđ):</Text>
+            <Text>{row?.fiat_amount?.toLocaleString() || 0} vnđ</Text>
+          </Space>
+          <Space>
+            <Text strong>Biến động:</Text>
+            <Text strong>{moneyFormat(row?.currentBalanceUser, 4)}$</Text>
+          </Space>
+        </Space>
+      ),
     },
     {
-      title: 'Note',
-      dataIndex: '_id',
-      align: 'center',
+      title: 'Chi tiết vé',
+      dataIndex: 'ticketInfo',
+      align: 'left',
       sorter: false,
-      render: (userId, row: any) => (
-        <div>
-
-          <div className='flex gap-2'>
-            <label>Ticket ID:</label>
-            <div>{row?.ticket?._id} </div>
-          </div>
-          <div className='flex gap-2'>
-            <label>ticket VIP:</label>
-            <div>{row?.ticket?.vip} </div>
-          </div>
-          {
-            row?.transaction_type === 'buy_ticket' &&
+      render: (_, row: any) => (
+        <Space direction="vertical" size={6} style={{ width: '100%' }}>
+          <Space>
+            <Text strong>Ticket ID:</Text>
+            <Text>{row?.ticket?._id || '-'}</Text>
+          </Space>
+          <Space>
+            <Text strong>Ticket VIP:</Text>
+            <Text>{row?.ticket?.vip ?? '-'}</Text>
+          </Space>
+          {row?.transaction_type === 'buy_ticket' && (
             <>
-              <div className='flex gap-2'>
-                <label>Ngày bắt đầu:</label>
-                <div>{new Date(row?.startTime)?.toLocaleString()}</div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Ngày trả thưởng:</label>
-                <div>{new Date(row?.rewardTime)?.toLocaleString()}</div>
-              </div>
+              <Space>
+                <Text strong>Ngày bắt đầu:</Text>
+                <Text>{row?.startTime ? new Date(row.startTime).toLocaleString() : '-'}</Text>
+              </Space>
+              <Space>
+                <Text strong>Ngày trả thưởng:</Text>
+                <Text>{row?.rewardTime ? new Date(row.rewardTime).toLocaleString() : '-'}</Text>
+              </Space>
             </>
-          }
-
-          <div className='flex gap-2'>
-            <label>Số ngày Earn:</label>
-            <div>{row?.ticket?.earningDay} ngày</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Trả thưởng mỗi ngày:</label>
-            <div>{row?.ticket?.incomePerDay}$</div>
-          </div>
-        </div>
-      )
+          )}
+          <Space>
+            <Text strong>Số ngày Earn:</Text>
+            <Text>{row?.ticket?.earningDay ?? 0} ngày</Text>
+          </Space>
+          <Space>
+            <Text strong>Trả thưởng mỗi ngày:</Text>
+            <Text>{row?.ticket?.incomePerDay ?? 0}$</Text>
+          </Space>
+        </Space>
+      ),
     },
     {
       title: 'Loại GD',
@@ -199,52 +209,67 @@ const Tickets = () => {
       filters: [
         { text: 'Thu hoạch', value: 'reward_ticket' },
         { text: 'Thuê đất', value: 'buy_ticket' },
-        { text: 'Huỷ hợp đồng', value: 'refund_ticket' },
+        { text: 'Hết thời gian', value: 'refund_ticket' },
       ],
       sorter: false,
-      render: (userId, row: any) => (
-        <div>
-          {
-            row?.transaction_type === 'reward_ticket' && <Tag color='orange-inverse'>Thu hoạch</Tag>
-          }
-          {
-            row?.transaction_type === 'buy_ticket' && <Tag color='green-inverse'>Thuê đất</Tag>
-          }
-          {
-            row?.transaction_type === 'refund_ticket' && <Tag color='red-inverse'>Huỷ hợp đồng</Tag>
-          }
-        </div>
-      )
+      render: (_, row: any) => {
+        const tagMap = {
+          reward_ticket: { color: 'orange', label: 'Thu hoạch' },
+          buy_ticket: { color: 'green', label: 'Thuê đất' },
+          refund_ticket: { color: 'red', label: 'Hết thời gian' },
+        } as any;
+        const tag = tagMap[row?.transaction_type];
+        if (!tag) return null;
+        return <Tag color={tag.color} style={{ fontWeight: 'bold' }}>{tag.label}</Tag>;
+      },
     },
     {
       title: 'Trạng thái',
       dataIndex: 'transaction_status',
+      align: 'center',
       filters: [
         { text: 'Hoàn thành', value: 'finish' },
         { text: 'Đang farm', value: 'processing' },
+        { text: 'Huỷ', value: 'cancel' },
       ],
-      align: 'center',
       sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          {
-            row?.transaction_status === 'processing' && <Tag className='text-center' color='orange-inverse'>Đang farm</Tag>
-          }
-          {
-            row?.transaction_status === 'cancel' && <Tag className='text-center' color='red-inverse'>Huỷ</Tag>
-          }
-
-          {
-            row?.transaction_status === 'finish' && <Tag className='text-center' color='green-inverse'>Hoàn thành</Tag>
-          }
-        </div>
-      )
+      render: (_, row: any) => {
+        const statusMap = {
+          finish: { color: 'green', label: 'Hoàn thành' },
+          processing: { color: 'orange', label: 'Đang farm' },
+          cancel: { color: 'red', label: 'Huỷ' },
+        } as Record<string, any>;
+        const status = statusMap[row?.transaction_status];
+        if (!status) return null;
+        return <Tag color={status.color} style={{ fontWeight: 'bold' }}>{status.label}</Tag>;
+      },
     },
-
-
-
-
+    {
+      title: 'Action',
+      align: 'center',
+      fixed: 'right',
+      render: (_, row: any) => (
+        <div className="flex justify-center">
+          <Link to={`/user-detail/${row?.user?._id}`} className="text-green-600 hover:text-green-800">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 cursor-pointer"
+              aria-label="View details"
+              role="img"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </Link>
+        </div>
+      ),
+    },
   ];
+
+
 
   const handleActionOnSelect = (key: string, transaction: any) => {
     showConfirmation(key, transaction);

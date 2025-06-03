@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prettier/prettier */
 import {
   ActionType,
   ProTable,
@@ -6,7 +8,7 @@ import {
   TableDropdown,
   ProDescriptions,
 } from '@ant-design/pro-components';
-import { Avatar, BreadcrumbProps, Card, Modal, Space, Tag } from 'antd';
+import { Avatar, BreadcrumbProps, Card, Modal, Space, Tag, Tooltip } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
@@ -51,141 +53,138 @@ const HistoryUser = () => {
   const [modal, modalContextHolder] = Modal.useModal();
   const [data, setData] = useState<any>()
 
+  const transactionTypeTags: Record<string, { text: string; color: string }> = {
+    reward_refferal: { text: 'Thưởng giới thiệu', color: 'cyan-inverse' },
+    withdraw: { text: 'Rút tiền', color: 'red-inverse' },
+    deposit: { text: 'Nạp tiền', color: 'geekblue-inverse' },
+    checkin: { text: 'Điểm danh', color: 'red-inverse' },
+    reward_draw: { text: 'Vòng quay may mắn', color: 'green-inverse' },
+    reward_mine: { text: 'Đi tìm kho báu', color: 'gold-inverse' },
+    LIXI_MOI_NGAY: { text: 'Lì xì', color: 'volcano-inverse' },
+  };
+
+  const transactionStatusTags: Record<string, { text: string; color: string }> = {
+    pending: { text: 'Đang chờ', color: 'orange-inverse' },
+    cancel: { text: 'Đã huỷ', color: 'red-inverse' },
+    finish: { text: 'Hoàn thành', color: 'green-inverse' },
+  };
+
+  const noteMap: Record<string, string> = {
+    Lucky_Clover: 'Chúc may mắn',
+    Robot_Part: '+2 lượt',
+    x1_duck: '+1 mảnh vịt',
+    x2_duck: '+2 mảnh vịt',
+    x5_duck: '+5 mảnh vịt',
+  };
+
+
+
+  const labelStyle = "font-semibold text-gray-600";
+  const valueStyle = "font-medium text-gray-800";
+
   const columns: ProColumns[] = [
     {
-      title: 'User ID',
+      title: 'Thông tin người dùng',
       dataIndex: 'userId',
       align: 'center',
-      sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          <div className='flex gap-2'>
-            <label>ID GD:</label>
-            <div className='font-[700]'>{row?._id}</div>
+      render: (_, row: any) => {
+        const {
+          _id,
+          user,
+          createdAt
+        } = row || {};
+        return (
+          <div className="p-3 bg-white rounded-md shadow-sm space-y-2 text-sm text-left">
+            <div className="flex justify-between">
+              <span className={labelStyle}>ID:</span>
+              <span className={valueStyle}>{_id || '-'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className={labelStyle}>User ID:</span>
+              <span className={valueStyle}>{user?.userId || '-'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className={labelStyle}>Username:</span>
+              <span className={valueStyle}>{user?.phone || '-'}</span>
+            </div>
+            <div className="flex justify-between">
+              <Tooltip title="IP đăng ký">
+                <span className={labelStyle + " cursor-help"}>IP:</span>
+              </Tooltip>
+              <span className={valueStyle}>{user?.registerIp || '-'}</span>
+            </div>
+            <div className="flex justify-between">
+              <Tooltip title="Số dư hiện tại">
+                <span className={labelStyle + " cursor-help"}>Số dư:</span>
+              </Tooltip>
+              <span
+                className={`font-semibold ${user?.realBalance >= 5 ? 'text-red-600' : 'text-gray-800'}`}
+              >
+                {(user?.realBalance ?? 0).toLocaleString()}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className={labelStyle}>Ngày GD:</span>
+              <span className={valueStyle}>{createdAt ? new Date(createdAt).toLocaleString() : '-'}</span>
+            </div>
           </div>
-          <div className='flex gap-2'>
-            <label>User ID:</label>
-            <div>{row?.user?.userId}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>SĐT:</label>
-            <div>{row?.user?.phone}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>IP:</label>
-            <div className='font-[500]'>{row?.user?.registerIp}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số dư:</label>
-            <div style={{
-              color: row?.user?.realBalance >= 5 ? "red" : "#000",
-              fontWeight: 600
-            }}>{row?.user?.realBalance?.toLocaleString()}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Ngày giao dịch:</label>
-            <div>{new Date(row?.createdAt)?.toLocaleString()}</div>
-          </div>
-        </div>
-      )
+        );
+      }
     },
     {
-      title: 'Thông tin',
-      dataIndex: 'phone',
+      title: 'Chi tiết giao dịch',
+      dataIndex: 'transaction_type',
       align: 'center',
-      sorter: false,
-      render: (userId, row: any) => {
-        if (row?.transaction_type === 'withdraw') {
-          const bankInfo = row && JSON.parse(row?.paymentMethod || "{}")
+      render: (_, row: any) => {
+        const {
+          transaction_type,
+          paymentMethod,
+          value,
+          fiat_amount,
+          currentBalanceUser,
+          user
+        } = row || {};
+        const valUSD = Number(value?.toFixed(5)) || 0;
+        const valVND = fiat_amount?.toLocaleString() || '0';
+
+        if (transaction_type === 'withdraw') {
+          const bankInfo = paymentMethod ? JSON.parse(paymentMethod) : {};
           return (
-            <div className='flex flex-col gap-1'>
-              <div className='flex gap-2'>
-                <label>Tên Ngân Hàng:</label>
-                <div className='font-[700]'>{bankInfo?.nameBank || "-"}</div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Tên Chủ Thẻ:</label>
-                <div className='font-[700]'>{bankInfo?.holderName || "-"}</div>
-              </div>
-              <div className='flex gap-2'>
-                <label>STK:</label>
-                <div className='font-[700]'>{bankInfo?.numberBank || "-"}</div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Số lượng ($):</label>
-                <div className='font-[900]'>{Number(row?.value?.toFixed(5))}$ </div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Số tiền :</label>
-                <div>{bankInfo?.nameBank === 'BEP20' ?
-                  row?.fiat_amount + "$"
-                  : Number(row?.fiat_amount?.toFixed(0)) + "vnđ"}  </div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Biến động (vnđ):</label>
-                <div className='font-[900]'>{Number(row?.currentBalanceUser?.toFixed(4))}$</div>
-              </div>
+            <div className="p-3 bg-white rounded-md shadow-sm space-y-2 text-sm text-left">
+              <div className="flex justify-between"><span className={labelStyle}>Ngân hàng:</span> <span className={valueStyle}>{bankInfo?.nameBank || '-'}</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>Chủ thẻ:</span> <span className={valueStyle}>{bankInfo?.holderName || '-'}</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>STK:</span> <span className={valueStyle}>{bankInfo?.numberBank || '-'}</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>Số lượng ($):</span> <span className="font-bold text-indigo-600">{valUSD}$</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>Số tiền:</span> <span>{bankInfo?.nameBank === 'BEP20' ? fiat_amount + '$' : Number(fiat_amount?.toFixed(0)) + ' vnđ'}</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>Biến động (vnđ):</span> <span className="font-bold text-indigo-600">{Number(currentBalanceUser?.toFixed(4))}$</span></div>
             </div>
-          )
-        }
-        if (row?.transaction_type === 'deposit') {
-          return (
-            <div className='flex flex-col gap-1'>
-              <div className='flex gap-2'>
-                <label>Cổng thanh toán:</label>
-                <div>{row?.paymentMethod}</div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Số lượng ($):</label>
-                <div className='font-[900]'>{Number(row?.value?.toFixed(5))}$ </div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Số tiền (vnđ):</label>
-                <div>{row?.fiat_amount?.toLocaleString()} vnđ </div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Biến động (vnđ):</label>
-                <div className='font-[900]'>{Number(row?.currentBalanceUser?.toFixed(4))}$</div>
-              </div>
-            </div>
-          )
-        } else {
-          return (
-            <div className='flex flex-col gap-1'>
-              <div className='flex gap-2'>
-                <label>Số lần checkin:</label>
-                <div>{row?.user?.checkinToday}$ </div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Số lượng ($):</label>
-                <div className='font-[900]'>{Number(row?.value?.toFixed(5))}$ </div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Số tiền (vnđ):</label>
-                <div>{row?.fiat_amount?.toLocaleString()} vnđ </div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Biến động :</label>
-                <div className='font-[900]'>{Number(row?.currentBalanceUser?.toFixed(4))}$</div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Số lần checkin :</label>
-                <div>{row?.user?.checkInToday}</div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Số lần lần tìm kho báu :</label>
-                <div>{row?.user?.mineNum}</div>
-              </div>
-              <div className='flex gap-2'>
-                <label>Số ticket :</label>
-                <div>{row?.user?.duckSticker}</div>
-              </div>
-            </div>
-          )
+          );
         }
 
+        if (transaction_type === 'deposit') {
+          return (
+            <div className="p-3 bg-white rounded-md shadow-sm space-y-2 text-sm text-left">
+              <div className="flex justify-between"><span className={labelStyle}>Cổng thanh toán:</span> <span className={valueStyle}>{paymentMethod}</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>Số lượng ($):</span> <span className="font-bold text-indigo-600">{valUSD}$</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>Số tiền (vnđ):</span> <span>{valVND} vnđ</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>Biến động (vnđ):</span> <span className="font-bold text-indigo-600">{Number(currentBalanceUser?.toFixed(4))}$</span></div>
+            </div>
+          );
+        }
+
+        // Các loại khác
+        return (
+          <div className="p-3 bg-white rounded-md shadow-sm space-y-2 text-sm text-left">
+            <div className="flex justify-between"><span className={labelStyle}>Số lần checkin:</span> <span>{user?.checkinToday ?? 0}</span></div>
+            <div className="flex justify-between"><span className={labelStyle}>Số lượng ($):</span> <span className="font-bold text-indigo-600">{valUSD}$</span></div>
+            <div className="flex justify-between"><span className={labelStyle}>Số tiền (vnđ):</span> <span>{valVND} vnđ</span></div>
+            <div className="flex justify-between"><span className={labelStyle}>Biến động:</span> <span className="font-bold text-indigo-600">{Number(currentBalanceUser?.toFixed(4))}$</span></div>
+            <div className="flex justify-between"><span className={labelStyle}>Số lần checkin:</span> <span>{user?.checkInToday ?? 0}</span></div>
+            <div className="flex justify-between"><span className={labelStyle}>Số lần tìm kho báu:</span> <span>{user?.mineNum ?? 0}</span></div>
+            <div className="flex justify-between"><span className={labelStyle}>Số ticket:</span> <span>{user?.duckSticker ?? 0}</span></div>
+          </div>
+        );
       }
-
     },
     {
       title: 'Loại GD',
@@ -197,88 +196,103 @@ const HistoryUser = () => {
         { text: 'Điểm danh', value: 'checkin' },
         { text: 'Vòng quay', value: 'reward_draw' },
         { text: 'Kho báu', value: 'reward_mine' },
+        { text: 'Lì xì', value: 'LIXI_MOI_NGAY' },
       ],
       align: 'center',
-      sorter: false,
-      render: (userId, row: any) => (
-        <div>
-          {
-            row?.transaction_type === 'reward_refferal' && <Tag color='cyan-inverse'>Thưởng giới thiệu</Tag>
-          }
-          {
-            row?.transaction_type === 'withdraw' && <Tag color='red-inverse'>Rút tiền</Tag>
-          }
-          {
-            row?.transaction_type === 'deposit' && <Tag color='geekblue-inverse'>Nạp tiền</Tag>
-          }
-          {
-            row?.transaction_type === 'checkin' && <Tag color='red-inverse'>Điểm danh</Tag>
-          }
-          {
-            row?.transaction_type === 'reward_draw' && <Tag color='green-inverse'>Vòng quay may mắn</Tag>
-          }
-          {
-            row?.transaction_type === 'reward_mine' && <Tag color='gold-inverse'>Đi tìm kho báu</Tag>
-          }
-        </div>
-      )
+      render: (_, row: any) => {
+        const type = row?.transaction_type;
+        const tagColorMap: Record<string, string> = {
+          reward_refferal: 'cyan',
+          withdraw: 'red',
+          deposit: 'geekblue',
+          checkin: 'volcano',
+          reward_draw: 'green',
+          reward_mine: 'gold',
+          LIXI_MOI_NGAY: 'volcano',
+        };
+        return type ? (
+          <Tag color={tagColorMap[type]} style={{ fontWeight: 'bold' }}>
+            {row.transaction_type === 'reward_refferal' && 'Thưởng giới thiệu'}
+            {row.transaction_type === 'withdraw' && 'Rút tiền'}
+            {row.transaction_type === 'deposit' && 'Nạp tiền'}
+            {row.transaction_type === 'checkin' && 'Điểm danh'}
+            {row.transaction_type === 'reward_draw' && 'Vòng quay may mắn'}
+            {row.transaction_type === 'reward_mine' && 'Đi tìm kho báu'}
+            {row.transaction_type === 'LIXI_MOI_NGAY' && 'Lì xì'}
+          </Tag>
+        ) : null;
+      }
     },
     {
       title: 'Trạng thái',
-      dataIndex: "transaction_status",
+      dataIndex: 'transaction_status',
       filters: [
         { text: 'Hoàn thành', value: 'finish' },
         { text: 'Đang chờ', value: 'pending' },
         { text: 'Đã huỷ', value: 'cancel' },
       ],
       align: 'center',
-      sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          {
-            row?.transaction_status === 'pending' && <Tag className='text-center' color='orange-inverse'>Đang chờ</Tag>
-          }
-          {
-            row?.transaction_status === 'cancel' && <Tag className='text-center' color='red-inverse'>Đã huỷ</Tag>
-          }
-          {
-            row?.transaction_status === 'finish' && <Tag className='text-center' color='green-inverse'>Hoàn thành</Tag>
-          }
-        </div>
-      )
-    },
-
-    {
-      title: 'Note',
-      dataIndex: '_id',
-      align: 'center',
-      sorter: false,
-      render: (userId, row: any) => {
-        if (row?.note === "Lucky_Clover" ||
-          row?.note === "Robot_Part" ||
-          row?.note === "x1_duck" ||
-          row?.note === "x2_duck" ||
-          row?.note === "x5_duck"
-        )
-          return (
-            <div>
-              {row?.note === "Lucky_Clover" && "Chúc may mắn"}
-              {row?.note === "Robot_Part" && "+2 lượt"}
-              {row?.note === "x1_duck" && "+1 mảnh vịt"}
-              {row?.note === "x2_duck" && "+2 mảnh vịt"}
-              {row?.note === "x5_duck" && "+5 mảnh vịt"}
-            </div>
-          )
-        return <>
-          {row?.note}
-        </>
+      render: (_, row: any) => {
+        const status = row?.transaction_status;
+        const colorMap: Record<string, string> = {
+          finish: 'green',
+          pending: 'orange',
+          cancel: 'red',
+        };
+        const textMap: Record<string, string> = {
+          finish: 'Hoàn thành',
+          pending: 'Đang chờ',
+          cancel: 'Đã huỷ',
+        };
+        return status ? (
+          <Tag color={colorMap[status]} style={{ fontWeight: 'bold' }}>
+            {textMap[status]}
+          </Tag>
+        ) : null;
       }
-
-
     },
-
-
+    {
+      title: 'Ghi chú',
+      dataIndex: 'note',
+      align: 'center',
+      render: (_, row: any) => {
+        const noteText = row?.note || '-';
+        const noteMap: Record<string, string> = {
+          Lucky_Clover: 'Chúc may mắn',
+          Robot_Part: '+2 lượt',
+          x1_duck: '+1 mảnh vịt',
+          x2_duck: '+2 mảnh vịt',
+          x5_duck: '+5 mảnh vịt',
+        };
+        return <div className="font-medium">{noteMap[noteText] || noteText}</div>;
+      }
+    },
+    {
+      title: 'Action',
+      align: 'center',
+      fixed: 'right',
+      render: (_, row: any) => (
+        <div className="flex justify-center">
+          <Link to={`/user-detail/${row?.user?._id}`} className="text-green-600 hover:text-green-800">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6 cursor-pointer"
+              aria-label="View details"
+              role="img"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+          </Link>
+        </div>
+      ),
+    },
   ];
+
+
 
   const getData = async () => {
     try {

@@ -1,14 +1,19 @@
-import { BreadcrumbProps, Button, Form, Input, message, Spin, Switch } from 'antd';
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useEffect, useState } from 'react';
+import {
+  BreadcrumbProps,
+  Button,
+  Form,
+  Input,
+  message,
+  Switch,
+} from 'antd';
+import { Link } from 'react-router-dom';
 import BasePageContainer from '../layout/PageContainer';
 import { webRoutes } from '../../routes/web';
-import { Link } from 'react-router-dom';
-import { AiFillGithub, AiOutlineBug, AiOutlineHeart } from 'react-icons/ai';
-import { FaRegLightbulb } from 'react-icons/fa';
-import packageJson from '../../../package.json';
-import { useEffect, useState } from 'react';
 import http from '../../utils/http';
 import { apiRoutes } from '../../routes/api';
-import TextArea from 'antd/es/input/TextArea';
 import TelegramBotForm from './TeleGramBotForm';
 
 const breadcrumb: BreadcrumbProps = {
@@ -25,220 +30,264 @@ const breadcrumb: BreadcrumbProps = {
 };
 
 const Setting = () => {
-  const [config, setConfig] = useState<any>()
-  const [loading, setLoading] = useState(false)
-  const [callBack, setCallBack] = useState(false)
+  const [config, setConfig] = useState<Record<string, any>>();
+  const [loading, setLoading] = useState(false);
+  const [refreshFlag, setRefreshFlag] = useState(false);
+
+  // Cập nhật config key - value
   const handleUpdateConfig = async (key: string, value: string) => {
-    setLoading(true)
+    setLoading(true);
     try {
-      await http.post(apiRoutes.updateConfig, {
-        key,
-        value
-      })
-      setCallBack(!callBack)
-      message.success("Change success")
+      await http.post(apiRoutes.updateConfig, { key, value });
+      setRefreshFlag(prev => !prev);
+      message.success('Thay đổi thành công');
     } catch (error: any) {
-      message.error(error?.response?.data?.message)
+      message.error(error?.response?.data?.message || 'Lỗi cập nhật');
+    } finally {
+      setLoading(false);
     }
-    setLoading(false)
-  }
+  };
 
-  const getConfigs = async () => {
+  // Lấy config từ server
+  const fetchConfigs = async () => {
     try {
-      const res = await http
-        .get(apiRoutes.getConfigs)
-
-      if (res && res.data) {
-        setConfig(res?.data?.data)
+      const res = await http.get(apiRoutes.getConfigs);
+      if (res?.data?.data) {
+        setConfig(res.data.data);
       }
     } catch (error) {
-      console.log(error);
-
+      console.error(error);
     }
-  }
-
+  };
 
   useEffect(() => {
-    getConfigs()
-  }, [callBack])
+    fetchConfigs();
+  }, [refreshFlag]);
 
-  const paymentGateway = config?.PAYMENT_GATEWAY ? JSON.parse(config?.PAYMENT_GATEWAY + "") : {};
-
+  const paymentGateway = config?.PAYMENT_GATEWAY
+    ? JSON.parse(config.PAYMENT_GATEWAY)
+    : {};
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
-
       <div className="m-5">
         <article>
+          <div className="my-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
 
-          <div>
+            {/* Cài đặt thanh toán */}
+            <section className="group relative rounded-xl border border-slate-200 p-6">
+              <h2 className="mb-6 text-lg font-semibold text-slate-700">
+                Cài đặt thanh toán
+              </h2>
 
-            <div className="my-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div className="group relative rounded-xl border border-slate-200 p-4">
-                <div className='my-2'>
-                  <h1 className='my-2 font-[500]'>Cài đặt thanh toán</h1>
-                  <div className='flex gap-2 items-center mb-3'>
-                    <div>Bật/Tắt Nạp :</div>
-                    <div>
-                      <Switch checked={config?.PAYMENT_MAINTENANCE_DEPOSIT === '0'} onChange={async (checked: boolean) => {
-                        handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT", checked ? "0" : "1")
-                      }} /></div>
-                  </div>
-                  <div className='flex gap-2 items-center mb-3'>
-                    <div>Bật/Tắt Rút :</div>
-                    <div><Switch checked={config?.PAYMENT_MAINTENANCE_WITHDRAW === '0'} onChange={async (checked: boolean) => {
-                      handleUpdateConfig("PAYMENT_MAINTENANCE_WITHDRAW", checked ? "0" : "1")
-                    }} /></div>
-                  </div>
-                  <div className='flex gap-2 items-center mb-3'>
-                    <div>Bật/Tắt Nạp Banking :</div>
-                    <div><Switch checked={config?.PAYMENT_MAINTENANCE_DEPOSIT_BANKING === '0'} onChange={async (checked: boolean) => {
-                      handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT_BANKING", checked ? "0" : "1")
-                    }} /></div>
-                  </div>
-                  <div className='flex gap-2 items-center mb-3'>
-                    <div>Bật/Tắt Nạp Crypto :</div>
-                    <div><Switch checked={config?.PAYMENT_MAINTENANCE_DEPOSIT_CRYPTO === '0'} onChange={async (checked: boolean) => {
-                      handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT_CRYPTO", checked ? "0" : "1")
-                    }} /></div>
-                  </div>
-                  <hr className='my-4' />
-
-
-                  <h1 className='my-2 font-[500] mb-3'>Gửi tin nhắn bot tele</h1>
-
-                  <TelegramBotForm />
-                  <h1 className='my-2 font-[500] mb-3'>Cài đặt CSKH</h1>
-
-                  {
-                    config?.LIVECHAT_ID &&
-                    <Form
-                      initialValues={{ value: config?.LIVECHAT_ID }}
-                      className='mt-5' onFinish={async (form) => {
-                        handleUpdateConfig("LIVECHAT_ID", form?.value)
-                      }}>
-                      <Form.Item name="value" >
-                        <Input placeholder='Nhập link CSKH' />
-                      </Form.Item>
-                      <Form.Item>
-                        <Button htmlType='submit'>Thay đổi</Button>
-                      </Form.Item>
-                    </Form>
-                  }
-
-                  <hr className='my-4' />
-
-                  <h1 className='my-2 font-[500] mb-3'>Cài đặt giá USDT</h1>
-
-                  {
-                    config?.USDT_PRICE &&
-                    <Form className='mt-5'
-                      initialValues={{ value: config?.USDT_PRICE }}
-                      onFinish={async (form) => {
-                        handleUpdateConfig("USDT_PRICE", form?.value)
-                      }}>
-                      <Form.Item name="value" >
-                          <Input placeholder='Nhập nội dung' type='number' addonAfter="VNĐ" />
-                      </Form.Item>
-                      <Form.Item>
-                        <Button htmlType='submit'>Thay đổi</Button>
-                      </Form.Item>
-                    </Form>
-                  }
-
-
-                  <hr className='my-4' />
-
-                  <h1 className='my-2 font-[500] mb-3'>Cài đặt thông báo trang chủ</h1>
-                  {
-                    config?.HOME_NOTIFICATION &&
-                    <Form className='mt-5' onFinish={async (form) => {
-                      handleUpdateConfig("HOME_NOTIFICATION", JSON.stringify(form))
-                    }} initialValues={JSON.parse(config?.HOME_NOTIFICATION)}>
-                      <Form.Item name="en" >
-                        <Input placeholder='Nhập nội dung tiếng anh' />
-                      </Form.Item>
-                      <Form.Item name="vi" >
-                        <Input placeholder='Nhập nội dung tiếng việt' />
-                      </Form.Item>
-                      <Form.Item name="zh" >
-                        <Input placeholder='Nhập nội dung tiếng trung' />
-                      </Form.Item>
-                      <Form.Item>
-                        <Button htmlType='submit'>Thay đổi</Button>
-                      </Form.Item>
-                    </Form>
-                  }
-
-
+              {[
+                {
+                  label: 'Bật/Tắt Nạp',
+                  key: 'PAYMENT_MAINTENANCE_DEPOSIT',
+                },
+                {
+                  label: 'Bật/Tắt Rút',
+                  key: 'PAYMENT_MAINTENANCE_WITHDRAW',
+                },
+                {
+                  label: 'Bật/Tắt Nạp Banking',
+                  key: 'PAYMENT_MAINTENANCE_DEPOSIT_BANKING',
+                },
+                {
+                  label: 'Bật/Tắt Nạp Crypto',
+                  key: 'PAYMENT_MAINTENANCE_DEPOSIT_CRYPTO',
+                },
+              ].map(({ label, key }) => (
+                <div key={key} className="flex items-center gap-4 mb-4">
+                  <div className="flex-1">{label} :</div>
+                  <Switch
+                    checked={config?.[key] === '0'}
+                    onChange={checked =>
+                      handleUpdateConfig(key, checked ? '0' : '1')
+                    }
+                    loading={loading}
+                  />
                 </div>
-              </div>
-              <div className="group relative rounded-xl border border-slate-200 p-4">
-                <h1 className='my-2 font-[500]'>Cài đặt tài khoản thanh toán banking</h1>
-                {
-                  config?.PAYMENT_GATEWAY &&
-                  <Form className='mt-5' onFinish={async (form) => {
-                    handleUpdateConfig("PAYMENT_GATEWAY", JSON.stringify(form))
-                  }} initialValues={paymentGateway}>
+              ))}
 
-                    <Form.Item name="holderName" >
-                      <Input placeholder='Tên chủ thẻ' />
-                    </Form.Item>
-                    <Form.Item name="nameBank" >
-                      <Input placeholder='Tên ngân hàng' />
-                    </Form.Item>
-                    <Form.Item name="numberBank" >
-                      <Input placeholder='Số tài khoản' />
-                    </Form.Item>
-                    <Form.Item name="code" >
-                      <Input placeholder='Code ngân hàng' />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button htmlType='submit'>Thay đổi</Button>
-                    </Form.Item>
-                  </Form>
-                }
+              <hr className="my-6" />
 
-                <hr className='my-4' />
+              {/* Bot Telegram */}
+              <h2 className="mb-4 text-lg font-semibold text-slate-700">
+                Gửi tin nhắn bot Telegram
+              </h2>
+              <TelegramBotForm />
 
-                <h1 className='my-2 font-[500] mb-3'>Địa chỉ ví</h1>
-                {
-                  config?.BEP20_ADDRESS &&
-                  <Form initialValues={{ value: config?.BEP20_ADDRESS }} className='mt-5' onFinish={async (form) => {
-                    handleUpdateConfig("BEP20_ADDRESS", form?.value)
-                  }}>
-                    <Form.Item name="value" >
-                      <Input placeholder='Nhập địa chỉ ví bep20 0x....' />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button htmlType='submit'>Thay đổi</Button>
-                    </Form.Item>
-                  </Form>
-                }
+              {/* Cài đặt CSKH */}
+              <h2 className="mt-8 mb-4 text-lg font-semibold text-slate-700">
+                Cài đặt CSKH
+              </h2>
+              {config?.LIVECHAT_ID && (
+                <Form
+                  initialValues={{ value: config.LIVECHAT_ID }}
+                  onFinish={({ value }) =>
+                    handleUpdateConfig('LIVECHAT_ID', value)
+                  }
+                  layout="inline"
+                  className="mb-6"
+                >
+                  <Form.Item name="value" className="flex-grow">
+                    <Input placeholder="Nhập link CSKH" />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                      Thay đổi
+                    </Button>
+                  </Form.Item>
+                </Form>
+              )}
 
-                <hr className='my-4' />
+              <hr className="my-6" />
 
-                <h1 className='my-2 font-[500] mb-3'>Cài đặt phí rút</h1>
-               {
-                  config?.FEE_WIDTHDRAW &&
-                  <Form className='mt-5'
-                      initialValues={{ value: config?.FEE_WIDTHDRAW }}
-                  onFinish={async (form) => {
-                    handleUpdateConfig("FEE_WIDTHDRAW", form?.value)
-                  }}>
-                    <Form.Item name="value" >
-                        <Input placeholder='Nhập nội dung' type='number' addonAfter="%" />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button htmlType='submit'>Thay đổi</Button>
-                    </Form.Item>
-                  </Form>
-               }
-                
+              {/* Giá USDT */}
+              <h2 className="mb-4 text-lg font-semibold text-slate-700">
+                Cài đặt giá USDT
+              </h2>
+              {config?.USDT_PRICE && (
+                <Form
+                  initialValues={{ value: config.USDT_PRICE }}
+                  onFinish={({ value }) =>
+                    handleUpdateConfig('USDT_PRICE', value)
+                  }
+                  layout="inline"
+                  className="mb-6"
+                >
+                  <Form.Item name="value" className="flex-grow">
+                    <Input
+                      placeholder="Nhập giá USDT"
+                      type="number"
+                      addonAfter="VNĐ"
+                    />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                      Thay đổi
+                    </Button>
+                  </Form.Item>
+                </Form>
+              )}
 
-              </div>
+              <hr className="my-6" />
 
-            </div>
+              {/* Thông báo trang chủ */}
+              <h2 className="mb-4 text-lg font-semibold text-slate-700">
+                Cài đặt thông báo trang chủ
+              </h2>
+              {config?.HOME_NOTIFICATION && (
+                <Form
+                  initialValues={JSON.parse(config.HOME_NOTIFICATION)}
+                  onFinish={form =>
+                    handleUpdateConfig('HOME_NOTIFICATION', JSON.stringify(form))
+                  }
+                  layout="vertical"
+                  className="space-y-4"
+                >
+                  <Form.Item name="en" label="Nội dung tiếng Anh">
+                    <Input placeholder="Nhập nội dung tiếng anh" />
+                  </Form.Item>
+                  <Form.Item name="vi" label="Nội dung tiếng Việt">
+                    <Input placeholder="Nhập nội dung tiếng việt" />
+                  </Form.Item>
+                  <Form.Item name="zh" label="Nội dung tiếng Trung">
+                    <Input placeholder="Nhập nội dung tiếng trung" />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                      Thay đổi
+                    </Button>
+                  </Form.Item>
+                </Form>
+              )}
+            </section>
+
+            {/* Cài đặt tài khoản và ví */}
+            <section className="group relative rounded-xl border border-slate-200 p-6">
+              <h2 className="mb-6 text-lg font-semibold text-slate-700">
+                Cài đặt tài khoản thanh toán banking
+              </h2>
+
+              {config?.PAYMENT_GATEWAY && (
+                <Form
+                  initialValues={paymentGateway}
+                  onFinish={form =>
+                    handleUpdateConfig('PAYMENT_GATEWAY', JSON.stringify(form))
+                  }
+                  layout="vertical"
+                  className="mb-8"
+                >
+                  <Form.Item name="holderName" label="Tên chủ thẻ">
+                    <Input placeholder="Tên chủ thẻ" />
+                  </Form.Item>
+                  <Form.Item name="nameBank" label="Tên ngân hàng">
+                    <Input placeholder="Tên ngân hàng" />
+                  </Form.Item>
+                  <Form.Item name="numberBank" label="Số tài khoản">
+                    <Input placeholder="Số tài khoản" />
+                  </Form.Item>
+                  <Form.Item name="code" label="Code ngân hàng">
+                    <Input placeholder="Code ngân hàng" />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                      Thay đổi
+                    </Button>
+                  </Form.Item>
+                </Form>
+              )}
+
+              <hr className="my-6" />
+
+              {/* Địa chỉ ví BEP20 */}
+              <h2 className="mb-6 text-lg font-semibold text-slate-700">Địa chỉ ví</h2>
+              {config?.BEP20_ADDRESS && (
+                <Form
+                  initialValues={{ value: config.BEP20_ADDRESS }}
+                  onFinish={({ value }) =>
+                    handleUpdateConfig('BEP20_ADDRESS', value)
+                  }
+                  layout="inline"
+                  className="mb-6"
+                >
+                  <Form.Item name="value" className="flex-grow">
+                    <Input placeholder="Nhập địa chỉ ví bep20 0x...." />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                      Thay đổi
+                    </Button>
+                  </Form.Item>
+                </Form>
+              )}
+
+              <hr className="my-6" />
+
+              {/* Cài đặt phí rút */}
+              <h2 className="mb-6 text-lg font-semibold text-slate-700">Cài đặt phí rút</h2>
+              {config?.FEE_WIDTHDRAW && (
+                <Form
+                  initialValues={{ value: config.FEE_WIDTHDRAW }}
+                  onFinish={({ value }) =>
+                    handleUpdateConfig('FEE_WIDTHDRAW', value)
+                  }
+                  layout="inline"
+                  className="mb-6"
+                >
+                  <Form.Item name="value" className="flex-grow">
+                    <Input placeholder="Nhập phí rút" type="number" addonAfter="%" />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                      Thay đổi
+                    </Button>
+                  </Form.Item>
+                </Form>
+              )}
+            </section>
           </div>
         </article>
       </div>

@@ -25,5 +25,9 @@ export const apiRoutes = {
   createEvent: `${API_URL}/admin/event`,
   updateEvent: (id: string) => `${API_URL}/admin/event/${id}`,
   deleteEvent: (id: string) => `${API_URL}/admin/event/${id}`,
-  getEvents: `${API_URL}/admin/events`
+  getEvents: `${API_URL}/admin/events`,
+  createWallet: `${API_URL}/admin/wallet`,
+  updateWallet: (id: string) => `${API_URL}/admin/wallet/${id}`,
+  deleteWallet: (id: string) => `${API_URL}/admin/wallet/${id}`,
+  getWallets: `${API_URL}/admin/wallets`
 };

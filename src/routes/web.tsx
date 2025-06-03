@@ -12,6 +12,7 @@ export const webRoutes = {
   codes: '/codes',
   about: '/about',
   userDetail: `/user-detail/:userId`,
-  pack:"/pack",
-  event:"/event"
+  pack: "/pack",
+  event: "/event",
+  wallet: "/wallet"
 };
