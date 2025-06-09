@@ -104,7 +104,15 @@ const Deposit = () => {
             <label>Số tiền (vnđ):</label>
             <div>{row?.fiat_amount?.toLocaleString()} vnđ </div>
           </div>
-          
+          {
+            row?.paymentMethod === 'crypto' &&
+
+            <div className='flex gap-2'>
+              <label>Địa chỉ ví nhận:</label>
+              <div>{row?.walletDeposit}</div>
+            </div>
+          }
+
         </div>
       )
     },
@@ -249,7 +257,7 @@ const Deposit = () => {
                 per_page: params.pageSize,
                 search: params.keyword,
                 transaction_type: "deposit",
-                status:true
+                status: true
               },
             })
             .then((response) => {

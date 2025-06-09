@@ -78,10 +78,26 @@ const Wallet = () => {
             key: 'assignedToUser',
             render: (user: any) => (
                 <div>
-                    Username : {user ? user.phone : '-'} <br />
-                    ID: {user ? user.userId : '-'}
+                    Username: {user ? user.phone : '-'} <br />
+                    ID: {user ? user.userId : '-'} <br />
                 </div>
             ),
+        },
+        {
+            title: 'OrderId',
+            dataIndex: 'assignedOrderId',
+            key: 'assignedOrderId',
+        },
+        {
+            title: 'Thời gian gán',
+            dataIndex: 'lastUsedAt',
+            key: 'lastUsedAt',
+            render: (value: any) => {
+                if (!value) return '-';
+                // assuming lastUsedAt is a unix timestamp in seconds
+                const date = new Date(Number(value) * 1000);
+                return date.toLocaleString();
+            },
         },
         {
             title: 'Tạo lúc',
@@ -120,6 +136,7 @@ const Wallet = () => {
             ),
         },
     ];
+
 
     return (
         <div>
