@@ -162,12 +162,14 @@ const HistoryUser = () => {
         }
 
         if (transaction_type === 'deposit') {
+
           return (
             <div className="p-3 bg-white rounded-md shadow-sm space-y-2 text-sm text-left">
               <div className="flex justify-between"><span className={labelStyle}>Cổng thanh toán:</span> <span className={valueStyle}>{paymentMethod}</span></div>
               <div className="flex justify-between"><span className={labelStyle}>Số lượng ($):</span> <span className="font-bold text-indigo-600">{valUSD}$</span></div>
               <div className="flex justify-between"><span className={labelStyle}>Số tiền (vnđ):</span> <span>{valVND} vnđ</span></div>
               <div className="flex justify-between"><span className={labelStyle}>Biến động (vnđ):</span> <span className="font-bold text-indigo-600">{Number(currentBalanceUser?.toFixed(4))}$</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>Ví nhận:</span> <span className="font-bold text-indigo-600">{row?.walletDeposit}</span></div>
             </div>
           );
         }
@@ -197,6 +199,7 @@ const HistoryUser = () => {
         { text: 'Vòng quay', value: 'reward_draw' },
         { text: 'Kho báu', value: 'reward_mine' },
         { text: 'Lì xì', value: 'LIXI_MOI_NGAY' },
+        { text: 'Nhận thưởng đại lý', value: 'reward_vip' },
       ],
       align: 'center',
       render: (_, row: any) => {
@@ -219,6 +222,7 @@ const HistoryUser = () => {
             {row.transaction_type === 'reward_draw' && 'Vòng quay may mắn'}
             {row.transaction_type === 'reward_mine' && 'Đi tìm kho báu'}
             {row.transaction_type === 'LIXI_MOI_NGAY' && 'Lì xì'}
+            {row.transaction_type === 'reward_vip' && 'Nhận thưởng đại lý'}
           </Tag>
         ) : null;
       }

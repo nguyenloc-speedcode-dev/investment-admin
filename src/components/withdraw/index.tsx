@@ -6,7 +6,7 @@ import {
   TableDropdown,
   ProDescriptions,
 } from '@ant-design/pro-components';
-import { Avatar, BreadcrumbProps, Modal, Space, Tag } from 'antd';
+import { Avatar, BreadcrumbProps, Input, Modal, Space, Tag } from 'antd';
 import { useRef } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
@@ -223,27 +223,41 @@ const Withdraw = () => {
     showConfirmation(key, transaction);
   };
 
+
   const showConfirmation = (key: string, transaction: any) => {
+    let reason = '';
+
     modal.confirm({
       title: 'Bạn có chắc thay đổi',
       icon: <ExclamationCircleOutlined />,
-
+      content: key === 'cancel' ? (
+        <div>
+          <p>Nhập lý do huỷ:</p>
+          <Input
+            placeholder="Lý do huỷ"
+            onChange={(e) => {
+              reason = e.target.value;
+            }}
+          />
+        </div>
+      ) : null,
       okButtonProps: {
         className: 'bg-primary',
       },
       onOk: () => {
+        if (key === 'cancel' && !reason) {
+          showNotification('Lỗi', NotificationType.ERROR, 'Vui lòng nhập lý do huỷ');
+          return Promise.reject(); // chặn đóng modal nếu không có lý do
+        }
+
         return http
           .post(`${apiRoutes.handleTransaction}`, {
             transaction_id: transaction._id,
-            typeResolve: key
+            typeResolve: key,
+            reason: key === 'cancel' ? reason : undefined,
           })
           .then(() => {
-            showNotification(
-              'Success',
-              NotificationType.SUCCESS,
-              'Đã thay đổi thành công'
-            );
-
+            showNotification('Thành công', NotificationType.SUCCESS, 'Đã thay đổi thành công');
             actionRef.current?.reloadAndRest?.();
           })
           .catch((error) => {
@@ -252,7 +266,6 @@ const Withdraw = () => {
       },
     });
   };
-
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
       <ProTable
