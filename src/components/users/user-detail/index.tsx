@@ -329,14 +329,14 @@ const UserDetail = () => {
                 checked={detail?.isAccountForAdmin} checkedChildren="Khoá " unCheckedChildren="Mở" />
             </div>
             <div className='flex justify-between items-center' >
-              <h2>Thêm Blacklist</h2>
+              <h2>Khoá chat</h2>
               <Switch
                 onChange={async (value) => {
                   try {
                     const res = await http.post(apiRoutes.updateUser, {
                       userId: detail?._id,
-                      updateType: 'blockUser',
-                      isBlackList: value
+                      updateType: 'lock_chat',
+                      isLockChat: value
                     })
                     if (res && res.data) {
                       message.success("Cập nhật tin thành công")
@@ -347,7 +347,7 @@ const UserDetail = () => {
                   }
                 }}
 
-                checked={detail?.isBlackList} checkedChildren="Khoá " unCheckedChildren="Mở" />
+                checked={detail?.isLockChat} checkedChildren="Khoá" unCheckedChildren="Mở" />
             </div>
           </Card>
         </Col>
