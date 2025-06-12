@@ -84,14 +84,20 @@ const Tickets = () => {
       sorter: false,
       render: (_, row: any) => (
         <Space direction="vertical" size={4} align="center" style={{ width: '100%' }}>
-          <Image
-            src={row?.ticket?.urlImage}
-            width={70}
-            style={{ borderRadius: 8, boxShadow: '0 2px 6px rgba(0,0,0,0.1)' }}
-            preview={false}
-            alt="Ticket"
-            fallback="/default-image.png"
-          />
+          {
+            row?.transaction_type !== 'unlock_land' &&
+            <Image
+              src={row?.ticket?.urlImage}
+              width={70}
+              style={{ borderRadius: 8, boxShadow: '0 2px 6px rgba(0,0,0,0.1)' }}
+              preview={false}
+              alt="Ticket"
+              fallback="/default-image.png"
+            />
+          }
+          {row?.transaction_type === "unlock_land" && (
+            <Text strong type="success">+ 1 Đất</Text>
+          )}
           {row?.transaction_type === "reward_ticket" && (
             <Text strong type="success">+{moneyFormat(row?.value)} $</Text>
           )}

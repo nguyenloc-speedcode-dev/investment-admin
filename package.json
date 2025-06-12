@@ -10,7 +10,9 @@
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx --fix .",
     "prettier": "prettier --check \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
-    "prettier:fix": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\""
+    "prettier:fix": "prettier --write \"./**/*.{js,jsx,ts,tsx,css,md,json}\"",
+    "zip": "zip -r dist.zip dist",
+    "deploy": "npm run build && npm run zip  && scp dist.zip root@35.240.167.19:/var/www/production/frontend && ssh root@35.240.167.19 'cd /var/www/production/frontend && sudo unzip -o dist.zip && sudo rm -r dist.zip'"
   },
   "dependencies": {
     "dayjs": "^1.11.13",
