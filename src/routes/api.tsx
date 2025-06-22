@@ -29,5 +29,6 @@ export const apiRoutes = {
   createWallet: `${API_URL}/admin/wallet`,
   updateWallet: (id: string) => `${API_URL}/admin/wallet/${id}`,
   deleteWallet: (id: string) => `${API_URL}/admin/wallet/${id}`,
-  getWallets: `${API_URL}/admin/wallets`
+  getWallets: `${API_URL}/admin/wallets`,
+  getHistoriesTrading: `${API_URL}/admin/trading-transactions`
 };

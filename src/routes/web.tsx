@@ -14,5 +14,6 @@ export const webRoutes = {
   userDetail: `/user-detail/:userId`,
   pack: "/pack",
   event: "/event",
-  wallet: "/wallet"
+  wallet: "/wallet",
+  tradings: '/tradings'
 };

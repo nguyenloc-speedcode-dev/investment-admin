@@ -1,5 +1,5 @@
 import { webRoutes } from '../../routes/web';
-import { BiHomeAlt2, BiPackage } from 'react-icons/bi';
+import { BiChart, BiHomeAlt2, BiPackage } from 'react-icons/bi';
 import Icon, { UserOutlined, PayCircleOutlined, HistoryOutlined, SettingOutlined } from '@ant-design/icons';
 import { CiMoneyCheck1 } from 'react-icons/ci';
 import RefIcon from '@ant-design/icons/lib/icons/AccountBookFilled';
@@ -9,19 +9,19 @@ export const sidebar = [
   {
     path: webRoutes.dashboard,
     key: webRoutes.dashboard,
-    name: 'Dashboard',
+    name: 'Thống kê',
     icon: <Icon component={BiHomeAlt2} />,
   },
   {
     path: webRoutes.users,
     key: webRoutes.users,
-    name: 'Users',
+    name: 'Tài khoản',
     icon: <UserOutlined />,
   },
   {
     path: webRoutes.pack,
     key: webRoutes.pack,
-    name: 'Gói',
+    name: 'Gói đầu tư',
     icon: <BiPackage />,
   },
   {
@@ -39,7 +39,7 @@ export const sidebar = [
   {
     path: webRoutes.wallet,
     key: webRoutes.wallet,
-    name: 'BEP20 Method',
+    name: 'BEP20',
     icon: <PayCircleOutlined />,
   },
   {
@@ -47,6 +47,12 @@ export const sidebar = [
     key: webRoutes.withdraw,
     name: 'Rút tiền',
     icon: <CiMoneyCheck1 />,
+  },
+  {
+    path: webRoutes.tradings,
+    key: webRoutes.tradings,
+    name: 'Giao dịch',
+    icon: <BiChart />,
   },
   {
     path: webRoutes.historyUser,
@@ -57,7 +63,7 @@ export const sidebar = [
   {
     path: webRoutes.tickets,
     key: webRoutes.tickets,
-    name: 'Lịch sử đầu tư',
+    name: 'Đầu tư',
     icon: <HistoryOutlined />,
   },
 

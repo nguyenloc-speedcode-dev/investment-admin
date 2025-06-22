@@ -16,6 +16,7 @@ import Codes from '../components/codes';
 import Package from '../components/invest-pack';
 import Event from '../components/event/Event';
 import Wallet from '../components/wallet/Wallet';
+import HistoriesTrading from '../components/history-trading';
 
 const errorElement = <ErrorPage />;
 const fallbackElement = <ProgressBar />;
@@ -96,6 +97,10 @@ export const browserRouter = createBrowserRouter([
       {
         path: webRoutes.historyUser,
         element: <HistoryUser />,
+      },
+      {
+        path: webRoutes.tradings,
+        element: <HistoriesTrading />,
       },
       {
         path: webRoutes.setting,
