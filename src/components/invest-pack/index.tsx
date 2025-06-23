@@ -144,71 +144,58 @@ const Package = () => {
       handleCreatePack(data);
     }
   };
+  const InfoItem = ({
+    label,
+    value,
+    valueClassName = '',
+  }: {
+    label: string;
+    value: React.ReactNode;
+    valueClassName?: string;
+  }) => (
+    <div className="flex justify-between border-b last:border-0 py-1 text-sm">
+      <span className="text-gray-500 font-medium w-36">{label}</span>
+      <span className={`text-right flex-1 ${valueClassName}`}>{value ?? '-'}</span>
+    </div>
+  );
 
   const columns: ProColumns<any>[] = [
     {
-      title: 'Thông tin gói',
+      title: 'Gói đầu tư',
       dataIndex: '_id',
-      align: 'center',
+      align: 'left',
+      width: 280,
       render: (_, row) => (
-        <div className="flex flex-col gap-1">
-          <div className="flex gap-2">
-            <label>ID:</label>
-            <div className="font-[700]">{row?._id}</div>
-          </div>
-          <div className="flex gap-2">
-            <label>VIP:</label>
-            <div>{row?.vip}</div>
-          </div>
-          <div className="flex gap-2">
-            <label>Giá Gói:</label>
-            <div>{row?.price}$</div>
-          </div>
-          <div className="flex gap-2">
-            <label>Giá sale:</label>
-            <div>{row?.sale_price}$</div>
-          </div>
-          <div className="flex gap-2">
-            <label>Số ngày </label>
-            <div>{row?.earningDay} ngày</div>
-          </div>
-          <div className="flex gap-2">
-            <label>Lợi nhuận</label>
-            <div className="font-[500]">{row?.incomePerDay}$ /ngày</div>
-          </div>
-          <div className="flex gap-2">
-            <label>Số lần đã mua</label>
-            <div>{row?.inventory}</div>
-          </div>
-          <div className="flex gap-2">
-            <label>Thời gian hết hạn</label>
-            <div>{row?.soldOutAt ? new Date(row?.soldOutAt).toLocaleString() : '-'}</div>
-          </div>
+        <div className="space-y-1 text-sm text-gray-800">
+          <InfoItem label="Mã gói" value={row?._id} />
+          <InfoItem label="VIP" value={`VIP${row?.vip}`} />
+          <InfoItem label="Thời gian" value={`${row?.earningDay} ngày`} />
+          <InfoItem
+            label="Lợi nhuận/ngày"
+            value={`${row?.incomePerDay}$`}
+            valueClassName="text-green-600 font-semibold"
+          />
         </div>
       ),
     },
     {
-      title: 'Hình ảnh',
-      dataIndex: 'urlImage',
-      align: 'center',
+      title: 'Giá & Số lượng',
+      dataIndex: 'price',
+      align: 'left',
+      width: 280,
       render: (_, row) => (
-        <div className="flex gap-4 justify-center">
-          <div className="flex flex-col items-center gap-2 mb-4">
-            <label>Ảnh đại diện</label>
-            {row?.urlImage ? (
-              <img src={row.urlImage} width={100} alt="Ảnh đại diện" />
-            ) : (
-              <div>Chưa có ảnh</div>
-            )}
-          </div>
-          <div className="flex flex-col items-center gap-2 mb-4">
-            <label>Ảnh mô tả</label>
-            {row?.desImage ? (
-              <img src={row.desImage} width={100} alt="Ảnh mô tả" />
-            ) : (
-              <div>Chưa có ảnh</div>
-            )}
-          </div>
+        <div className="space-y-1 text-sm text-gray-800">
+          <InfoItem label="Giá gói" value={`${row?.price}$`} />
+          <InfoItem label="Giá sale" value={`${row?.sale_price}$`} />
+          <InfoItem label="Đã mua" value={row?.inventory} />
+          <InfoItem
+            label="Hết hạn"
+            value={
+              row?.soldOutAt
+                ? new Date(row?.soldOutAt).toLocaleString('vi-VN')
+                : '-'
+            }
+          />
         </div>
       ),
     },
@@ -216,9 +203,12 @@ const Package = () => {
       title: 'Trạng thái',
       dataIndex: 'status',
       align: 'center',
+      width: 200,
       render: (_, row) => (
-        <div className="flex flex-col gap-2 items-center">
-          <Tag color={row?.status ? 'green' : 'orange'}>{row?.status ? 'Đang bán' : 'Đã đóng'}</Tag>
+        <div className="flex flex-col items-center gap-2">
+          <Tag color={row?.status ? 'green' : 'orange'}>
+            {row?.status ? 'Đang bán' : 'Đã đóng'}
+          </Tag>
           <Switch
             checked={row?.status}
             onChange={(checked) =>
@@ -231,9 +221,11 @@ const Package = () => {
     {
       title: 'Action',
       align: 'center',
+      width: 100,
       fixed: 'right',
       render: (_, row) => (
         <Button
+          type="primary"
           icon={<EditOutlined />}
           onClick={() => {
             setEditItem(row);
@@ -243,6 +235,8 @@ const Package = () => {
       ),
     },
   ];
+
+
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>

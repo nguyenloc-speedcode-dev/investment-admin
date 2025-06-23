@@ -66,7 +66,7 @@ const Users = () => {
 
   const columns: ProColumns[] = [
     {
-      title: 'User Info',
+      title: 'Tài khoản',
       dataIndex: 'userId',
       align: 'center',
       render: (_, row: any) => (
@@ -76,20 +76,19 @@ const Users = () => {
           <FieldRow label="Ref Code" value={row?.refCode} />
           <FieldRow label="Invite Code" value={row?.inviteCode || "-"} />
           <FieldRow label="Số người mời" value={row?.inviteUser?.length || "-"} />
+          <FieldRow label="Ngày tạo" value={row?.createdAt ? new Date(row.createdAt).toLocaleString() : "-"} />
         </div>
       ),
     },
     {
-      title: 'Tài khoản',
+      title: 'Hệ thống',
       dataIndex: 'phone',
       align: 'center',
       render: (_, row: any) => (
         <div className="flex flex-col gap-1 max-w-[220px]">
-          <FieldRow label="SĐT" value={row?.phone} />
           <FieldRow label="Đại lý" value={row?.vip} />
           <FieldRow label="VIP" value={row?.farmVip} />
           <FieldRow label="Mật khẩu" value={row?.password} />
-          <FieldRow label="Ngày tạo" value={row?.createdAt ? new Date(row.createdAt).toLocaleString() : "-"} />
           <FieldRow label="IP" value={row?.registerIp} valueClassName="font-medium" />
           <FieldRow label="DeviceId" value={row?.uuid} valueClassName="font-medium" />
         </div>
@@ -117,9 +116,7 @@ const Users = () => {
       render: (_, row: any) => (
         <div className="flex flex-col gap-1 max-w-[200px]">
           <FieldRow label="Số Vòng Quay" value={row?.drawNum} />
-          <FieldRow label="Số Ngày Checkin" value={row?.checkInToday} />
-          <FieldRow label="Số Ticker" value={row?.duckSticker} />
-          <FieldRow label="Số Lần tìm kho báu" value={row?.mineNum} />
+          <FieldRow label="Điểm danh" value={row?.checkInToday} />
         </div>
       ),
     },

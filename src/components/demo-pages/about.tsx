@@ -287,6 +287,74 @@ const Setting = () => {
                   </Form.Item>
                 </Form>
               )}
+              <hr className="my-6" />
+
+              {/* Cài đặt phí rút */}
+              <h2 className="mb-6 text-lg font-semibold text-slate-700">Cài đặt lợi nhuận</h2>
+              {config?.RATE_TRADE && (
+                <Form
+                  initialValues={{ value: config.RATE_TRADE }}
+                  onFinish={({ value }) =>
+                    handleUpdateConfig('RATE_TRADE', value)
+                  }
+                  layout="inline"
+                  className="mb-6"
+                >
+                  <Form.Item name="value" className="flex-grow">
+                    <Input placeholder="Nhập phí rút" type="number" addonAfter="%" />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                      Thay đổi
+                    </Button>
+                  </Form.Item>
+                </Form>
+              )}
+
+              {/* Cài đặt phí rút */}
+              <h2 className="mb-6 text-lg font-semibold text-slate-700">Cài đặt số lượng ảo</h2>
+              {config?.INIT_BUFF && (
+                <Form
+                  initialValues={{ value: config.INIT_BUFF }}
+                  onFinish={({ value }) =>
+                    handleUpdateConfig('INIT_BUFF', value)
+                  }
+                  layout="inline"
+                  className="mb-6"
+                >
+                  <Form.Item name="value" className="flex-grow">
+                    <Input placeholder="Nhập phí rút" type="number" />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                      Thay đổi
+                    </Button>
+                  </Form.Item>
+                </Form>
+              )}
+
+
+
+              <h2 className="mb-6 text-lg font-semibold text-slate-700">Cài đặt số lượng bitcoin</h2>
+              {config?.BITCOIN_VALUE && (
+                <Form
+                  initialValues={{ value: config.BITCOIN_VALUE }}
+                  onFinish={({ value }) =>
+                    handleUpdateConfig('BITCOIN_VALUE', value)
+                  }
+                  layout="inline"
+                  className="mb-6"
+                >
+                  <Form.Item name="value" className="flex-grow">
+                    <Input placeholder="Nhập phí rút" type="number" />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit" loading={loading}>
+                      Thay đổi
+                    </Button>
+                  </Form.Item>
+                </Form>
+              )}
             </section>
           </div>
         </article>

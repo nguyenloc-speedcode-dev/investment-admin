@@ -94,7 +94,7 @@ const HistoryUser = () => {
           createdAt
         } = row || {};
         return (
-          <div className="p-3 bg-white rounded-md shadow-sm space-y-2 text-sm text-left">
+          <div className="p-3 shadow-sm space-y-2 text-sm text-left">
             <div className="flex justify-between">
               <span className={labelStyle}>ID:</span>
               <span className={valueStyle}>{_id || '-'}</span>
@@ -113,18 +113,9 @@ const HistoryUser = () => {
               </Tooltip>
               <span className={valueStyle}>{user?.registerIp || '-'}</span>
             </div>
+
             <div className="flex justify-between">
-              <Tooltip title="Số dư hiện tại">
-                <span className={labelStyle + " cursor-help"}>Số dư:</span>
-              </Tooltip>
-              <span
-                className={`font-semibold ${user?.realBalance >= 5 ? 'text-red-600' : 'text-gray-800'}`}
-              >
-                {(user?.realBalance ?? 0).toLocaleString()}
-              </span>
-            </div>
-            <div className="flex justify-between">
-              <span className={labelStyle}>Ngày GD:</span>
+              <span className={labelStyle}>Thời gian:</span>
               <span className={valueStyle}>{createdAt ? new Date(createdAt).toLocaleString() : '-'}</span>
             </div>
           </div>
@@ -189,7 +180,7 @@ const HistoryUser = () => {
       }
     },
     {
-      title: 'Loại GD',
+      title: 'Loại ',
       dataIndex: 'transaction_type',
       filters: [
         { text: 'Thưởng giới thiệu', value: 'reward_refferal' },

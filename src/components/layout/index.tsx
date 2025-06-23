@@ -19,7 +19,7 @@ const Layout = () => {
 
   const defaultProps: ProLayoutProps = {
     title: CONFIG.appName,
-    logo: '/icon.png',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/46/Bitcoin.svg/2048px-Bitcoin.svg.png',
     fixedHeader: true,
     fixSiderbar: true,
     layout: CONFIG.theme.sidebarLayout,

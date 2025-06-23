@@ -7,7 +7,7 @@ enum LayoutType {
 }
 
 const CONFIG = {
-  appName: 'Investment',
+  appName: 'BitPool Invest',
   helpLink: 'https://github.com/arifszn/reforge',
   enablePWA: true,
   theme: {
@@ -16,9 +16,9 @@ const CONFIG = {
     showBreadcrumb: true,
   },
   metaTags: {
-    title: 'Investment',
+    title: 'BitPool',
     description: 'Quản lý thông tin dự án game',
-    imageURL: 'logo.svg',
+    imageURL: 'https://bitpoolinvest.com/static/media/logo.2fbb89a416183a821216.png',
   },
 };
 

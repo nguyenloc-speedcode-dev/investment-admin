@@ -77,41 +77,9 @@ const Tickets = () => {
   };
 
   const columns: ProColumns[] = [
+
     {
-      title: 'Ảnh & Thu hoạch',
-      dataIndex: 'ticketImage',
-      align: 'center',
-      sorter: false,
-      render: (_, row: any) => (
-        <Space direction="vertical" size={4} align="center" style={{ width: '100%' }}>
-          {
-            row?.transaction_type !== 'unlock_land' &&
-            <Image
-              src={row?.ticket?.urlImage}
-              width={70}
-              style={{ borderRadius: 8, boxShadow: '0 2px 6px rgba(0,0,0,0.1)' }}
-              preview={false}
-              alt="Ticket"
-              fallback="/default-image.png"
-            />
-          }
-          {row?.transaction_type === "unlock_land" && (
-            <Text strong type="success">+ 1 Đất</Text>
-          )}
-          {row?.transaction_type === "reward_ticket" && (
-            <Text strong type="success">+{moneyFormat(row?.value)} $</Text>
-          )}
-          {row?.transaction_type === "buy_ticket" && (
-            <Text strong type="warning">Mới mua</Text>
-          )}
-          {row?.transaction_type === "refund_ticket" && (
-            <Text strong type="danger">Hết giờ</Text>
-          )}
-        </Space>
-      ),
-    },
-    {
-      title: 'Thông tin giao dịch',
+      title: 'Thông tin',
       dataIndex: 'transactionInfo',
       align: 'left',
       sorter: false,
@@ -149,7 +117,7 @@ const Tickets = () => {
       ),
     },
     {
-      title: 'Chi tiết thanh toán',
+      title: 'Thanh toán',
       dataIndex: 'paymentInfo',
       align: 'left',
       sorter: false,
@@ -171,19 +139,23 @@ const Tickets = () => {
       ),
     },
     {
-      title: 'Chi tiết vé',
+      title: 'Chi tiết',
       dataIndex: 'ticketInfo',
       align: 'left',
       sorter: false,
       render: (_, row: any) => (
         <Space direction="vertical" size={6} style={{ width: '100%' }}>
           <Space>
-            <Text strong>Ticket ID:</Text>
-            <Text>{row?.ticket?._id || '-'}</Text>
+            <Text strong>Tên gói:</Text>
+            <Text>{row?.ticket?.name || '-'}</Text>
           </Space>
           <Space>
-            <Text strong>Ticket VIP:</Text>
+            <Text strong> VIP Gói:</Text>
             <Text>{row?.ticket?.vip ?? '-'}</Text>
+          </Space>
+          <Space>
+            <Text strong>Giá gói:</Text>
+            <Text>{row?.ticket?.price ?? '-'}</Text>
           </Space>
           {row?.transaction_type === 'buy_ticket' && (
             <>
@@ -209,20 +181,20 @@ const Tickets = () => {
       ),
     },
     {
-      title: 'Loại GD',
+      title: 'Loại',
       dataIndex: 'transaction_type',
       align: 'center',
       filters: [
-        { text: 'Thu hoạch', value: 'reward_ticket' },
-        { text: 'Thuê đất', value: 'buy_ticket' },
-        { text: 'Hết thời gian', value: 'refund_ticket' },
+        { text: 'Trả lãi', value: 'reward_ticket' },
+        { text: 'Mua gói', value: 'buy_ticket' },
+        { text: 'Hết hạn', value: 'refund_ticket' },
       ],
       sorter: false,
       render: (_, row: any) => {
         const tagMap = {
-          reward_ticket: { color: 'orange', label: 'Thu hoạch' },
-          buy_ticket: { color: 'green', label: 'Thuê đất' },
-          refund_ticket: { color: 'red', label: 'Hết thời gian' },
+          reward_ticket: { color: 'orange', label: 'Trả lãi' },
+          buy_ticket: { color: 'green', label: 'Mua gói' },
+          refund_ticket: { color: 'red', label: 'Hết hạn' },
         } as any;
         const tag = tagMap[row?.transaction_type];
         if (!tag) return null;
@@ -235,14 +207,14 @@ const Tickets = () => {
       align: 'center',
       filters: [
         { text: 'Hoàn thành', value: 'finish' },
-        { text: 'Đang farm', value: 'processing' },
+        { text: 'Đang hoạt động', value: 'processing' },
         { text: 'Huỷ', value: 'cancel' },
       ],
       sorter: false,
       render: (_, row: any) => {
         const statusMap = {
           finish: { color: 'green', label: 'Hoàn thành' },
-          processing: { color: 'orange', label: 'Đang farm' },
+          processing: { color: 'orange', label: 'Đang hoạt động' },
           cancel: { color: 'red', label: 'Huỷ' },
         } as Record<string, any>;
         const status = statusMap[row?.transaction_status];
