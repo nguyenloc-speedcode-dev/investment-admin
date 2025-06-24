@@ -58,6 +58,13 @@ const Deposit = () => {
       sorter: false,
       render: (userId, row: any) => (
         <div className='flex flex-col gap-1'>
+          {row?.user?.isAccountForAdmin &&
+            <Tag color='red-inverse'>
+              <div className=' font-[900]'>
+                Tài khoản Admin
+              </div>
+            </Tag>
+          }
           <div className='flex gap-2'>
             <label>ID GD:</label>
             <div className='font-[700]'>{row?._id}</div>

@@ -94,6 +94,14 @@ const HistoriesTrading = () => {
         const { user, createdAt } = row || {};
         return (
           <div className="p-3 text-sm leading-6 space-y-1 rounded-md bg-white border border-gray-100 shadow-sm">
+            {user?.isAccountForAdmin &&
+              <Tag color='red-inverse'>
+                <div className=' font-[900]'>
+                  Tài khoản Admin
+                </div>
+              </Tag>
+            }
+
             <div className="flex justify-between">
               <span className="text-gray-500 min-w-[80px]">User ID:</span>
               <span className="text-gray-800 font-medium">{user?.userId || '-'}</span>

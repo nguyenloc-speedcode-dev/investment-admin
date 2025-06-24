@@ -8,7 +8,7 @@ import {
   TableDropdown,
   ProDescriptions,
 } from '@ant-design/pro-components';
-import { Avatar, BreadcrumbProps, Button, Dropdown, Menu, Modal, Select, Space } from 'antd';
+import { Avatar, BreadcrumbProps, Button, Dropdown, Menu, Modal, Select, Space, Tag } from 'antd';
 import { useRef, useState } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
@@ -71,8 +71,16 @@ const Users = () => {
       align: 'center',
       render: (_, row: any) => (
         <div className="flex flex-col gap-1 max-w-[200px]">
+          {row?.isAccountForAdmin &&
+            <Tag color='red-inverse'>
+              <div className=' font-[900] text-center'>
+                Tài khoản Admin
+              </div>
+            </Tag>
+          }
+          <FieldRow label="_ID" value={row?._id} />
           <FieldRow label="User ID" value={row?.userId} />
-          <FieldRow label="User Name" value={row?.userName} />
+          <FieldRow label="Phone" value={row?.phone} />
           <FieldRow label="Ref Code" value={row?.refCode} />
           <FieldRow label="Invite Code" value={row?.inviteCode || "-"} />
           <FieldRow label="Số người mời" value={row?.inviteUser?.length || "-"} />

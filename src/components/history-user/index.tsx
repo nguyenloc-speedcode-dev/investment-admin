@@ -84,7 +84,7 @@ const HistoryUser = () => {
 
   const columns: ProColumns[] = [
     {
-      title: 'Thông tin người dùng',
+      title: 'Thông tin',
       dataIndex: 'userId',
       align: 'center',
       render: (_, row: any) => {
@@ -95,16 +95,23 @@ const HistoryUser = () => {
         } = row || {};
         return (
           <div className="p-3 shadow-sm space-y-2 text-sm text-left">
+            {user?.isAccountForAdmin &&
+              <Tag color='red-inverse'>
+                <div className=' font-[900]'>
+                  Tài khoản Admin
+                </div>
+              </Tag>
+            }
             <div className="flex justify-between">
               <span className={labelStyle}>ID:</span>
               <span className={valueStyle}>{_id || '-'}</span>
             </div>
             <div className="flex justify-between">
-              <span className={labelStyle}>User ID:</span>
+              <span className={labelStyle}>ID:</span>
               <span className={valueStyle}>{user?.userId || '-'}</span>
             </div>
             <div className="flex justify-between">
-              <span className={labelStyle}>Username:</span>
+              <span className={labelStyle}>Phone:</span>
               <span className={valueStyle}>{user?.phone || '-'}</span>
             </div>
             <div className="flex justify-between">
@@ -113,17 +120,20 @@ const HistoryUser = () => {
               </Tooltip>
               <span className={valueStyle}>{user?.registerIp || '-'}</span>
             </div>
-
             <div className="flex justify-between">
-              <span className={labelStyle}>Thời gian:</span>
-              <span className={valueStyle}>{createdAt ? new Date(createdAt).toLocaleString() : '-'}</span>
+              <span className={labelStyle}>Phone:</span>
+              <span className={valueStyle}>{user?.phone || '-'}</span>
+            </div>
+            <div className="flex justify-between">
+              <span className={labelStyle}>Số dư:</span>
+              <span className={valueStyle}>{Number(user?.realBalance?.toFixed(3))}</span>
             </div>
           </div>
         );
       }
     },
     {
-      title: 'Chi tiết giao dịch',
+      title: 'Chi tiết',
       dataIndex: 'transaction_type',
       align: 'center',
       render: (_, row: any) => {
@@ -160,7 +170,7 @@ const HistoryUser = () => {
               <div className="flex justify-between"><span className={labelStyle}>Số lượng ($):</span> <span className="font-bold text-indigo-600">{valUSD}$</span></div>
               <div className="flex justify-between"><span className={labelStyle}>Số tiền (vnđ):</span> <span>{valVND} vnđ</span></div>
               <div className="flex justify-between"><span className={labelStyle}>Biến động (vnđ):</span> <span className="font-bold text-indigo-600">{Number(currentBalanceUser?.toFixed(4))}$</span></div>
-              <div className="flex justify-between"><span className={labelStyle}>Ví nhận:</span> <span className="font-bold text-indigo-600">{row?.walletDeposit}</span></div>
+              <div className="flex justify-between"><span className={labelStyle}>Ví nhận:</span> <span className="font-bold text-indigo-600">{row?.walletDeposit || "-"}</span></div>
             </div>
           );
         }

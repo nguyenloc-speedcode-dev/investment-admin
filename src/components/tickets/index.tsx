@@ -85,6 +85,13 @@ const Tickets = () => {
       sorter: false,
       render: (_, row: any) => (
         <Space direction="vertical" size={6} style={{ width: '100%' }}>
+          {row?.user?.isAccountForAdmin &&
+            <Tag color='red-inverse'>
+              <div className=' font-[900] text-center'>
+                Tài khoản Admin
+              </div>
+            </Tag>
+          }
           <Space>
             <Text strong>ID GD:</Text>
             <Text code>{row?._id || '-'}</Text>
@@ -106,7 +113,7 @@ const Tickets = () => {
           <Space>
             <Text strong>Số dư:</Text>
             <Text strong style={{ color: row?.user?.realBalance >= 5 ? 'red' : 'inherit' }}>
-              {moneyFormat(row?.user?.realBalance)}
+              {Number(row?.user?.realBalance?.toFixed(3))}
             </Text>
           </Space>
           <Space>
@@ -125,11 +132,11 @@ const Tickets = () => {
         <Space direction="vertical" size={6} style={{ width: '100%' }}>
           <Space>
             <Text strong>Số lượng ($):</Text>
-            <Text strong>{moneyFormat(row?.value)}$</Text>
+            <Text strong>{Number(row?.value?.toFixed(3))}$</Text>
           </Space>
           <Space>
             <Text strong>Số tiền (vnđ):</Text>
-            <Text>{row?.fiat_amount?.toLocaleString() || 0} vnđ</Text>
+            <Text>{Number(row?.fiat_amount?.toFixed(3)) || 0} vnđ</Text>
           </Space>
           <Space>
             <Text strong>Biến động:</Text>
@@ -157,18 +164,14 @@ const Tickets = () => {
             <Text strong>Giá gói:</Text>
             <Text>{row?.ticket?.price ?? '-'}</Text>
           </Space>
-          {row?.transaction_type === 'buy_ticket' && (
-            <>
-              <Space>
-                <Text strong>Ngày bắt đầu:</Text>
-                <Text>{row?.startTime ? new Date(row.startTime).toLocaleString() : '-'}</Text>
-              </Space>
-              <Space>
-                <Text strong>Ngày trả thưởng:</Text>
-                <Text>{row?.rewardTime ? new Date(row.rewardTime).toLocaleString() : '-'}</Text>
-              </Space>
-            </>
-          )}
+          <Space>
+            <Text strong>Ngày bắt đầu:</Text>
+            <Text>{row?.startTime ? new Date(row.startTime).toLocaleString() : '-'}</Text>
+          </Space>
+          <Space>
+            <Text strong>Ngày trả thưởng:</Text>
+            <Text>{row?.rewardTime ? new Date(row.rewardTime).toLocaleString() : '-'}</Text>
+          </Space>
           <Space>
             <Text strong>Số ngày Earn:</Text>
             <Text>{row?.ticket?.earningDay ?? 0} ngày</Text>
@@ -289,13 +292,13 @@ const Tickets = () => {
         <Card>
           <div className='my-4'>
             <div className='flex gap-2 items-center'>
-              Tổng gói đầu tư:
+              Tổng gói đang đầu tư:
               <div className='font-[900]'>
                 {data?.countTicketProgress?.toLocaleString()}
               </div>
             </div>
             <div className='flex gap-2 items-center'>
-              Tổng gói đã trả:
+              Tổng gói hết hạn:
               <div className='font-[900]'>
                 {data?.countTicketFinish?.toLocaleString()}
               </div>
@@ -305,13 +308,13 @@ const Tickets = () => {
         <Card>
           <div className='my-4'>
             <div className='flex gap-2 items-center'>
-              Tổng gói kết thúc hôm nay:
+              Tổng gói hết hạn hôm nay:
               <div className='font-[900]'>
                 {data?.countTicketFinishToday?.toLocaleString()}
               </div>
             </div>
             <div className='flex gap-2 items-center'>
-              Tổng gói trả hôm nay:
+              Tổng lãi trả hôm nay:
               <div className='font-[900]'>
                 {data?.totalEarnToday?.toLocaleString()}$
               </div>
