@@ -71,14 +71,6 @@ const Deposit = () => {
             <div>{row?.user?.phone}</div>
           </div>
           <div className='flex gap-2'>
-            <label>IP:</label>
-            <div className='font-[500]'>{row?.user?.registerIp}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số dư:</label>
-            <div>{row?.user?.realBalance?.toLocaleString()}</div>
-          </div>
-          <div className='flex gap-2'>
             <label>Ngày nạp:</label>
             <div>{new Date(row?.createdAt)?.toLocaleString()}</div>
           </div>
@@ -104,7 +96,6 @@ const Deposit = () => {
             <label>Số tiền (vnđ):</label>
             <div>{row?.fiat_amount?.toLocaleString()} vnđ </div>
           </div>
-          
         </div>
       )
     },
@@ -133,7 +124,7 @@ const Deposit = () => {
       align: 'center',
       sorter: false,
       render: (userId, row: any) => (
-        <div className='font-[900] text-red-600'>
+        <div>
           {row?.note}
         </div>
       )

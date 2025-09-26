@@ -1,14 +1,10 @@
-import { BreadcrumbProps, Button, Form, Input, message, Spin, Switch } from 'antd';
+import { BreadcrumbProps } from 'antd';
 import BasePageContainer from '../layout/PageContainer';
 import { webRoutes } from '../../routes/web';
 import { Link } from 'react-router-dom';
 import { AiFillGithub, AiOutlineBug, AiOutlineHeart } from 'react-icons/ai';
 import { FaRegLightbulb } from 'react-icons/fa';
 import packageJson from '../../../package.json';
-import { useEffect, useState } from 'react';
-import http from '../../utils/http';
-import { apiRoutes } from '../../routes/api';
-import TextArea from 'antd/es/input/TextArea';
 
 const breadcrumb: BreadcrumbProps = {
   items: [
@@ -17,149 +13,113 @@ const breadcrumb: BreadcrumbProps = {
       title: <Link to={webRoutes.dashboard}>Dashboard</Link>,
     },
     {
-      key: webRoutes.setting,
-      title: <Link to={webRoutes.about}>Cài đặt</Link>,
+      key: webRoutes.about,
+      title: <Link to={webRoutes.about}>About</Link>,
     },
   ],
 };
 
-const Setting = () => {
-  const [config, setConfig] = useState<any>()
-  const [loading, setLoading] = useState(false)
-  const [callBack, setCallBack] = useState(false)
-  const handleUpdateConfig = async (key: string, value: string) => {
-    setLoading(true)
-    try {
-      await http.post(apiRoutes.updateConfig, {
-        key,
-        value
-      })
-      setCallBack(!callBack)
-    } catch (error: any) {
-      message.error(error?.response?.data?.message)
-    }
-    setLoading(false)
-  }
-
-  const getConfigs = async () => {
-    try {
-      const res = await http
-        .get(apiRoutes.getConfigs)
-
-      if (res && res.data) {
-        setConfig(res?.data?.data)
-      }
-    } catch (error) {
-      console.log(error);
-
-    }
-  }
-
-
-  useEffect(() => {
-    getConfigs()
-  }, [callBack])
-
-  const paymentGateway = config?.PAYMENT_GATEWAY ? JSON.parse(config?.PAYMENT_GATEWAY + "") : {};
-
+const About = () => {
+  const packageVersion = packageJson.version;
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
-
       <div className="m-5">
         <article>
-
+          <header className="mb-9 space-y-1">
+            <p className="font-display text-sm font-medium text-primary">
+              v{packageVersion}
+            </p>
+            <h1 className="font-display text-3xl tracking-tight text-slate-900">
+              Reforge
+            </h1>
+          </header>
           <div>
-
+            <p className="lead">
+              An out-of-box UI solution for enterprise applications as a React
+              boilerplate.{' '}
+            </p>
             <div className="my-12 grid grid-cols-1 gap-6 sm:grid-cols-2">
-              <div className="group relative rounded-xl border border-slate-200 p-4">
-                <div className='my-2'>
-                  <h1 className='my-2 font-[500]'>Cài đặt thanh toán</h1>
-                  <div className='flex gap-2 items-center mb-3'>
-                    <div>Bật/Tắt Nạp :</div>
-                    <div>
-                      <Switch checked={config?.PAYMENT_MAINTENANCE_DEPOSIT === '0'} onChange={async (checked: boolean) => {
-                        handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT", checked ? "0" : "1")
-                      }} /></div>
-                  </div>
-                  <div className='flex gap-2 items-center mb-3'>
-                    <div>Bật/Tắt Rút :</div>
-                    <div><Switch checked={config?.PAYMENT_MAINTENANCE_WITHDRAW === '0'} onChange={async (checked: boolean) => {
-                      handleUpdateConfig("PAYMENT_MAINTENANCE_WITHDRAW", checked ? "0" : "1")
-                    }} /></div>
-                  </div>
-                  <div className='flex gap-2 items-center mb-3'>
-                    <div>Bật/Tắt Nạp Banking :</div>
-                    <div><Switch checked={config?.PAYMENT_MAINTENANCE_DEPOSIT_BANKING === '0'} onChange={async (checked: boolean) => {
-                      handleUpdateConfig("PAYMENT_MAINTENANCE_DEPOSIT_BANKING", checked ? "0" : "1")
-                    }} /></div>
-                  </div>
-                  <hr className='my-4' />
-
-                  <h1 className='my-2 font-[500] mb-3'>Cài đặt CSKH</h1>
-                  <a className='text-blue-700' href={config?.CUSTOMER_SERVICE} target='_blank'>{config?.CUSTOMER_SERVICE}</a>
-                  <Form className='mt-5' onFinish={async (form) => {
-                    handleUpdateConfig("CUSTOMER_SERVICE", form?.value)
-                  }}>
-                    <Form.Item name="value" >
-                      <Input placeholder='Nhập link CSKH' />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button htmlType='submit'>Thay đổi</Button>
-                    </Form.Item>
-                  </Form>
-
-                  <hr className='my-4' />
-
-                  <h1 className='my-2 font-[500] mb-3'>Cài đặt thông báo</h1>
-                  <div className='text-gray-800' >{config?.NOTIFICATION}</div>
-                  <Form className='mt-5' onFinish={async (form) => {
-                    handleUpdateConfig("NOTIFICATION", form?.value)
-                  }}>
-                    <Form.Item name="value" >
-                      <TextArea placeholder='Nhập nội dung' rows={3} />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button htmlType='submit'>Thay đổi</Button>
-                    </Form.Item>
-                  </Form>
+              <div className="group relative rounded-xl border border-slate-200">
+                <div className="absolute -inset-px rounded-xl border-2 border-transparent opacity-0 [background:linear-gradient(var(--quick-links-hover-bg,theme(colors.sky.50)),var(--quick-links-hover-bg,theme(colors.sky.50)))_padding-box,linear-gradient(to_top,theme(colors.indigo.400),theme(colors.cyan.400),theme(colors.sky.500))_border-box] group-hover:opacity-100" />
+                <div className="relative overflow-hidden rounded-xl p-6">
+                  <AiFillGithub className="text-4xl opacity-90" />
+                  <h2 className="mt-4 font-display text-base text-slate-900">
+                    <a
+                      href="https://github.com/arifszn/reforge"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-primary"
+                    >
+                      <span className="absolute -inset-px rounded-xl" />
+                      GitHub
+                    </a>
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-700">
+                    Source code of the website.
+                  </p>
                 </div>
               </div>
-              <div className="group relative rounded-xl border border-slate-200 p-4">
-                <h1 className='my-2 font-[500]'>Cài đặt tài khoản thanh toán banking</h1>
-
-                <div>
-                  Tên Chủ Thẻ :  {paymentGateway?.holderName}
+              <div className="group relative rounded-xl border border-slate-200">
+                <div className="absolute -inset-px rounded-xl border-2 border-transparent opacity-0 [background:linear-gradient(var(--quick-links-hover-bg,theme(colors.sky.50)),var(--quick-links-hover-bg,theme(colors.sky.50)))_padding-box,linear-gradient(to_top,theme(colors.indigo.400),theme(colors.cyan.400),theme(colors.sky.500))_border-box] group-hover:opacity-100" />
+                <div className="relative overflow-hidden rounded-xl p-6">
+                  <AiOutlineBug className="text-4xl opacity-90" />
+                  <h2 className="mt-4 font-display text-base text-slate-900">
+                    <a
+                      href="https://github.com/arifszn/reforge/issues"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-primary"
+                    >
+                      <span className="absolute -inset-px rounded-xl" />
+                      Report Bug
+                    </a>
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-700">
+                    Something not working? Report a bug.
+                  </p>
                 </div>
-                <div>
-                  STK :  {paymentGateway?.numberBank}
-                </div>
-                <div >
-                  Tên ngân hàng :  {paymentGateway?.nameBank}
-                </div>
-
-                <Form className='mt-5' onFinish={async (form) => {
-                  handleUpdateConfig("PAYMENT_GATEWAY", JSON.stringify(form))
-                }}>
-
-                  <Form.Item name="holderName" >
-                    <Input placeholder='Tên chủ thẻ' />
-                  </Form.Item>
-                  <Form.Item name="nameBank" >
-                    <Input placeholder='Tên ngân hàng' />
-                  </Form.Item>
-                  <Form.Item name="numberBank" >
-                    <Input placeholder='Số tài khoản' />
-                  </Form.Item>
-                  <Form.Item name="code" >
-                    <Input placeholder='Code ngân hàng' />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button htmlType='submit'>Thay đổi</Button>
-                  </Form.Item>
-                </Form>
               </div>
-
+              <div className="group relative rounded-xl border border-slate-200">
+                <div className="absolute -inset-px rounded-xl border-2 border-transparent opacity-0 [background:linear-gradient(var(--quick-links-hover-bg,theme(colors.sky.50)),var(--quick-links-hover-bg,theme(colors.sky.50)))_padding-box,linear-gradient(to_top,theme(colors.indigo.400),theme(colors.cyan.400),theme(colors.sky.500))_border-box] group-hover:opacity-100" />
+                <div className="relative overflow-hidden rounded-xl p-6">
+                  <FaRegLightbulb className="text-4xl opacity-90" />
+                  <h2 className="mt-4 font-display text-base text-slate-900">
+                    <a
+                      href="https://github.com/arifszn/reforge/discussions/categories/ideas"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-primary"
+                    >
+                      <span className="absolute -inset-px rounded-xl" />
+                      Request Feature
+                    </a>
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-700">
+                    Need something? Request a new feature.
+                  </p>
+                </div>
+              </div>
+              <div className="group relative rounded-xl border border-slate-200">
+                <div className="absolute -inset-px rounded-xl border-2 border-transparent opacity-0 [background:linear-gradient(var(--quick-links-hover-bg,theme(colors.sky.50)),var(--quick-links-hover-bg,theme(colors.sky.50)))_padding-box,linear-gradient(to_top,theme(colors.indigo.400),theme(colors.cyan.400),theme(colors.sky.500))_border-box] group-hover:opacity-100" />
+                <div className="relative overflow-hidden rounded-xl p-6">
+                  <AiOutlineHeart className="text-4xl opacity-90" />
+                  <h2 className="mt-4 font-display text-base text-slate-900">
+                    <a
+                      href="https://github.com/arifszn/reforge/blob/main/CONTRIBUTING.md"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="hover:text-primary"
+                    >
+                      <span className="absolute -inset-px rounded-xl" />
+                      Contribute
+                    </a>
+                  </h2>
+                  <p className="mt-1 text-sm text-slate-700">
+                    Contribute to this project.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </article>
@@ -168,4 +128,4 @@ const Setting = () => {
   );
 };
 
-export default Setting;
+export default About;

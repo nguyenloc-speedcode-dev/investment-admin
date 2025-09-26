@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import StatCard from './StatCard';
 import { AiOutlineStar, AiOutlineTeam } from 'react-icons/ai';
 import Icon from '@ant-design/icons';
-import { BiCommentDetail, BiMoney, BiPhotoAlbum } from 'react-icons/bi';
+import { BiCommentDetail, BiPhotoAlbum } from 'react-icons/bi';
 import { MdOutlineArticle, MdOutlinePhoto } from 'react-icons/md';
 import { StatisticCard } from '@ant-design/pro-components';
 import LazyImage from '../lazy-image';
@@ -38,27 +38,10 @@ const breadcrumb: BreadcrumbProps = {
 
 const Dashboard = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [dashboard, setDashboard] = useState<any>()
   const [users, setUsers] = useState<User[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
 
-  const getDataDashboard = async () => {
-    setLoading(true)
-    try {
-      const res = await http.get(apiRoutes.dataDashboard)
-      if (res && res.data) {
-        setDashboard(res?.data?.data)
-      }
-    } catch (err) {
-      console.log(err);
-
-    }
-    setLoading(false)
-  }
-
-  useEffect(() => {
-    getDataDashboard()
-  }, [])
+ 
 
   return (
     <BasePageContainer breadcrumb={breadcrumb} transparent={true}>
@@ -67,35 +50,35 @@ const Dashboard = () => {
           <StatCard
             loading={loading}
             icon={<Icon component={AiOutlineTeam} />}
-            title="Tổng User"
-            number={dashboard?.totalUser}
+            title="Users"
+            number={12}
           />
         </Col>
         <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
           <StatCard
             loading={loading}
             icon={<Icon component={MdOutlineArticle} />}
-            title="Tổng đầu tư"
-            number={dashboard?.totalInvest}
+            title="Posts"
+            number={100}
           />
         </Col>
         <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
           <StatCard
             loading={loading}
-            icon={<Icon component={BiMoney} />}
-            title="Số lần nạp"
-            number={dashboard?.totalDeposit}
+            icon={<Icon component={BiPhotoAlbum} />}
+            title="Albums"
+            number={100}
           />
         </Col>
         <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
           <StatCard
             loading={loading}
-            icon={<Icon component={BiMoney} />}
-            title="Số lần rút"
-            number={dashboard?.totalWithdraw}
+            icon={<Icon component={MdOutlinePhoto} />}
+            title="Photos"
+            number={500}
           />
         </Col>
-        {/* <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
+        <Col xl={6} lg={6} md={12} sm={24} xs={24} style={{ marginBottom: 24 }}>
           <StatCard
             loading={loading}
             icon={<Icon component={BiCommentDetail} />}
@@ -110,8 +93,8 @@ const Dashboard = () => {
             title="Reviews"
             number={100}
           />
-        </Col> */}
-        {/* <Col
+        </Col>
+        <Col
           xl={12}
           lg={12}
           md={24}
@@ -145,7 +128,7 @@ const Dashboard = () => {
               />
             </StatisticCard.Group>
           </Card>
-        </Col> */}
+        </Col>
         <Col
           xl={12}
           lg={12}
@@ -154,22 +137,34 @@ const Dashboard = () => {
           xs={24}
           style={{ marginBottom: 24 }}
         >
-          <Card bordered={false} className="w-full h-full cursor-default" title="Hoạt động mới nhất">
+          <Card bordered={false} className="w-full h-full cursor-default">
             <List
               loading={loading}
               itemLayout="horizontal"
-              dataSource={dashboard?.latestUserTransactions}
-              renderItem={(i: any) => (
+              dataSource={users}
+              renderItem={(user) => (
                 <List.Item>
                   <List.Item.Meta
-                    
-                    title={`${i?.transaction_type} ${i?.value?.toLocaleString()}`}
-                    description={new Date(i?.createdAt)?.toLocaleString()}
+                    avatar={
+                      <Avatar
+                        shape="circle"
+                        size="small"
+                        src={
+                          <LazyImage
+                            src={user.avatar}
+                            placeholder={
+                              <div className="bg-gray-100 h-full w-full" />
+                            }
+                          />
+                        }
+                      />
+                    }
+                    title={`${user.first_name} ${user.last_name}`}
+                    description={user.email}
                   />
                 </List.Item>
               )}
             />
-            <Link to={webRoutes.historyUser} className='text-blue-500'>Xem thêm ...</Link>
           </Card>
         </Col>
         <Col
@@ -180,22 +175,39 @@ const Dashboard = () => {
           xs={24}
           style={{ marginBottom: 24 }}
         >
-          <Card bordered={false} className="w-full h-full cursor-default" title="Đầu tư mới nhất">
-            <List
+          <Card bordered={false} className="w-full h-full cursor-default">
+            <Table
               loading={loading}
-              itemLayout="horizontal"
-              dataSource={dashboard?.latestTicketTransactions}
-              renderItem={(i: any) => (
-                <List.Item>
-                  <List.Item.Meta
-
-                    title={`${i?.transaction_type} ${i?.value?.toLocaleString()}`}
-                    description={new Date(i?.createdAt)?.toLocaleString()}
-                  />
-                </List.Item>
-              )}
+              pagination={false}
+              showHeader={false}
+              dataSource={reviews}
+              columns={[
+                {
+                  title: 'Title',
+                  dataIndex: 'title',
+                  key: 'title',
+                  align: 'left',
+                },
+                {
+                  title: 'Year',
+                  dataIndex: 'year',
+                  key: 'year',
+                  align: 'center',
+                  render: (_, row: Review) => (
+                    <Tag color={row.color}>{row.year}</Tag>
+                  ),
+                },
+                {
+                  title: 'Star',
+                  dataIndex: 'star',
+                  key: 'star',
+                  align: 'center',
+                  render: (_, row: Review) => (
+                    <Rate disabled defaultValue={row.star} />
+                  ),
+                },
+              ]}
             />
-            <Link to={webRoutes.tickets} className='text-blue-500'>Xem thêm ...</Link>
           </Card>
         </Col>
       </Row>

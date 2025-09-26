@@ -7,7 +7,7 @@ import {
   ProDescriptions,
 } from '@ant-design/pro-components';
 import { Avatar, BreadcrumbProps, Modal, Space, Tag } from 'antd';
-import { useEffect, useRef, useState } from 'react';
+import { useRef } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
@@ -49,44 +49,8 @@ const breadcrumb: BreadcrumbProps = {
 const Tickets = () => {
   const actionRef = useRef<ActionType>();
   const [modal, modalContextHolder] = Modal.useModal();
-  const [data, setData] = useState<any>()
-  const getData = async () => {
-    try {
-      const res = await http.get(apiRoutes.dataTickets)
-      if (res && res.data) {
-        setData(res.data?.data)
-      }
-    } catch (error) {
-      console.log(error);
-
-    }
-  }
-
-  useEffect(() => {
-    getData()
-  }, [])
 
   const columns: ProColumns[] = [
-    {
-      title: 'User ID',
-      dataIndex: 'userId',
-      align: 'center',
-      sorter: false,
-      render: (userId, row: any) => (
-        <div className='flex flex-col gap-1'>
-          <img src={`https://api.vinnfastcapitalgroup.com${row?.ticket?.urlImage}`} width={70} className='m-auto' />
-          {
-            row?.transaction_type === "reward_ticket" &&
-
-            <div className='font-[700] text-green-700'>
-              + {row?.value} $
-            </div>
-          }
-          <div>
-          </div>
-        </div>
-      )
-    },
     {
       title: 'User ID',
       dataIndex: 'userId',
@@ -107,17 +71,6 @@ const Tickets = () => {
             <div>{row?.user?.phone}</div>
           </div>
           <div className='flex gap-2'>
-            <label>IP:</label>
-            <div className='font-[500]'>{row?.user?.registerIp}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số dư:</label>
-            <div style={{
-              color: row?.user?.realBalance >= 5 ? "red" : "#000",
-              fontWeight:600
-            }}>{row?.user?.realBalance?.toLocaleString()}</div>
-          </div>
-          <div className='flex gap-2'>
             <label>Ngày giao dịch:</label>
             <div>{new Date(row?.createdAt)?.toLocaleString()}</div>
           </div>
@@ -130,23 +83,20 @@ const Tickets = () => {
       align: 'center',
       sorter: false,
       render: (userId, row: any) => {
-        return (
-          <div className='flex flex-col gap-1'>
+      return (
+        <div className='flex flex-col gap-1'>
 
-            <div className='flex gap-2'>
-              <label>Số lượng ($):</label>
-              <div>{row?.value}$ </div>
-            </div>
-            <div className='flex gap-2'>
-              <label>Số tiền (vnđ):</label>
-              <div>{row?.fiat_amount?.toLocaleString()} vnđ </div>
-            </div>
-            <div className='flex gap-2'>
-              <label>Biến động:</label>
-              <div>{row?.currentBalanceUser}$</div>
-            </div>
+          <div className='flex gap-2'>
+            <label>Số lượng ($):</label>
+            <div>{row?.value}$ </div>
           </div>
-        )
+          <div className='flex gap-2'>
+            <label>Số tiền (vnđ):</label>
+            <div>{row?.fiat_amount?.toLocaleString()} vnđ </div>
+          </div>
+          
+        </div>
+      )
 
       }
 
@@ -158,7 +108,6 @@ const Tickets = () => {
       sorter: false,
       render: (userId, row: any) => (
         <div>
-
           <div className='flex gap-2'>
             <label>Ticket ID:</label>
             <div>{row?.ticket?._id} </div>
@@ -180,7 +129,7 @@ const Tickets = () => {
               </div>
             </>
           }
-
+        
           <div className='flex gap-2'>
             <label>Số ngày Earn:</label>
             <div>{row?.ticket?.earningDay} ngày</div>
@@ -196,33 +145,22 @@ const Tickets = () => {
       title: 'Loại GD',
       dataIndex: 'transaction_type',
       align: 'center',
-      filters: [
-        { text: 'Trả thưởng', value: 'reward_ticket' },
-        { text: 'Mua ticket', value: 'buy_ticket' },
-        { text: 'Trả lại ticket', value: 'refund_ticket' },
-      ],
       sorter: false,
       render: (userId, row: any) => (
         <div>
           {
-            row?.transaction_type === 'reward_ticket' && <Tag color='cyan-inverse'>Trả thưởng</Tag>
+            row?.transaction_type === 'reward_ticket' && <Tag color='cyan'>Trả thưởng</Tag>
           }
           {
-            row?.transaction_type === 'buy_ticket' && <Tag color='green-inverse'>Mua ticket</Tag>
+            row?.transaction_type === 'buy_ticket' && <Tag color='blue'>Mua ticket</Tag>
           }
-          {
-            row?.transaction_type === 'refund_ticket' && <Tag color='geekblue-inverse'>Trả lại Ticket</Tag>
-          }
+          
         </div>
       )
     },
     {
       title: 'Trạng thái',
-      dataIndex: 'transaction_status',
-      filters: [
-        { text: 'Hoàn thành', value: 'finish' },
-        { text: 'Đang chờ', value: 'processing' },
-      ],
+      dataIndex: '_id',
       align: 'center',
       sorter: false,
       render: (userId, row: any) => (
@@ -233,7 +171,7 @@ const Tickets = () => {
           {
             row?.transaction_status === 'cancel' && <Tag className='text-center' color='red-inverse'>Đã huỷ</Tag>
           }
-
+        
           {
             row?.transaction_status === 'finish' && <Tag className='text-center' color='green-inverse'>Đã trả</Tag>
           }
@@ -241,7 +179,7 @@ const Tickets = () => {
       )
     },
 
-
+  
 
 
   ];
@@ -282,37 +220,6 @@ const Tickets = () => {
 
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
-      <div className='grid grid-cols-4 '>
-        <div className='my-4'>
-          <div className='flex gap-2 items-center'>
-            Tổng gói đầu tư:
-            <div className='font-[900]'>
-              {data?.countTicketProgress?.toLocaleString()}
-            </div>
-          </div>
-          <div className='flex gap-2 items-center'>
-            Tổng gói đã trả:
-            <div className='font-[900]'>
-              {data?.countTicketFinish?.toLocaleString()}
-            </div>
-          </div>
-        </div>
-        <div className='my-4'>
-          <div className='flex gap-2 items-center'>
-            Tổng gói kết thúc hôm nay:
-            <div className='font-[900]'>
-              {data?.countTicketFinishToday?.toLocaleString()}
-            </div>
-          </div>
-          <div className='flex gap-2 items-center'>
-            Tổng gói trả hôm nay:
-            <div className='font-[900]'>
-              {data?.totalEarnToday?.toLocaleString()}$
-            </div>
-          </div>
-        </div>
-     
-      </div>
       <ProTable
         columns={columns}
         cardBordered={false}
@@ -334,15 +241,13 @@ const Tickets = () => {
           pageSize: 10,
         }}
         actionRef={actionRef}
-        request={(params, sorter, filter) => {
+        request={(params) => {
           return http
             .get(apiRoutes.tickets, {
               params: {
                 page: params.current,
                 per_page: params.pageSize,
                 search: params.keyword,
-                transaction_type: filter?.transaction_type,
-                transaction_status: filter?.transaction_status
               },
             })
             .then((response) => {

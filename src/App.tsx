@@ -8,13 +8,10 @@ import { apiRoutes } from './routes/api';
 import { login, logout } from './store/slices/adminSlice';
 import { useEffect } from 'react';
 
-
 function App() {
 
   const state: RootState = store.getState();
   const dispatch = useDispatch();
-
-
 
 
   const getAdmin = async () => {

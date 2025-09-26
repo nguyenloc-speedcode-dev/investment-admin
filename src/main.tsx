@@ -15,11 +15,13 @@ const persistor = persistStore(store);
 injectStore(store);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <ConfigProvider {...antdConfig}>
-    <Provider store={store}>
-      <PersistGate loading={<Loader />} persistor={persistor}>
-        <App />
-      </PersistGate>
-    </Provider>
-  </ConfigProvider>
+  <React.StrictMode>
+    <ConfigProvider {...antdConfig}>
+      <Provider store={store}>
+        <PersistGate loading={<Loader />} persistor={persistor}>
+          <App />
+        </PersistGate>
+      </Provider>
+    </ConfigProvider>
+  </React.StrictMode>
 );

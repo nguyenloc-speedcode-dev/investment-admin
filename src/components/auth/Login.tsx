@@ -43,7 +43,9 @@ const Login = () => {
         password: values.password,
       })
       .then((response) => {
-     
+        console.log('====================================');
+        console.log(response);
+        console.log('====================================');
 
         const admin: Admin = {
           token: response.data?.data?.tokens.accessToken,

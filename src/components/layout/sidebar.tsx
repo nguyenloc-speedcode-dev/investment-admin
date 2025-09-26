@@ -1,8 +1,7 @@
 import { webRoutes } from '../../routes/web';
 import { BiHomeAlt2 } from 'react-icons/bi';
-import Icon, { UserOutlined, InfoCircleOutlined, HistoryOutlined, SettingOutlined } from '@ant-design/icons';
+import Icon, { UserOutlined, InfoCircleOutlined, HistoryOutlined } from '@ant-design/icons';
 import { CiMoneyCheck1 } from 'react-icons/ci';
-import RefIcon from '@ant-design/icons/lib/icons/AccountBookFilled';
 
 export const sidebar = [
   {
@@ -32,26 +31,14 @@ export const sidebar = [
   {
     path: webRoutes.historyUser,
     key: webRoutes.historyUser,
-    name: 'Hoạt động',
+    name: 'Lịch sử giao dịch',
     icon: <HistoryOutlined />,
   },
   {
     path: webRoutes.tickets,
     key: webRoutes.tickets,
-    name: 'Lịch sử đầu tư',
+    name: 'Lịch sử mua Ticket',
     icon: <HistoryOutlined />,
-  },
-  {
-    path: webRoutes.codes,
-    key: webRoutes.codes,
-    name: 'Mã giới thiệu',
-    icon: <RefIcon />,
-  },
-  {
-    path: webRoutes.setting,
-    key: webRoutes.setting,
-    name: 'Cài đặt',
-    icon: <SettingOutlined />,
   },
   // {
   //   path: webRoutes.about,

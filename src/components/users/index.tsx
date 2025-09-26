@@ -6,8 +6,8 @@ import {
   TableDropdown,
   ProDescriptions,
 } from '@ant-design/pro-components';
-import { Avatar, BreadcrumbProps, Button, Dropdown, Menu, Modal, Select, Space } from 'antd';
-import { useRef, useState } from 'react';
+import { Avatar, BreadcrumbProps, Modal, Space } from 'antd';
+import { useRef } from 'react';
 import { FiUsers } from 'react-icons/fi';
 import { CiCircleMore } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
@@ -27,8 +27,6 @@ import Icon, {
   DeleteOutlined,
   UserOutlined,
   WalletOutlined,
-  EllipsisOutlined,
-  MoneyCollectFilled,
 } from '@ant-design/icons';
 import { MdAdd, MdMoney, MdVerifiedUser, MdWallet } from 'react-icons/md';
 
@@ -49,10 +47,6 @@ const breadcrumb: BreadcrumbProps = {
 const Users = () => {
   const actionRef = useRef<ActionType>();
   const [modal, modalContextHolder] = Modal.useModal();
-  const [vipSelection, setVipSelection] = useState<number | null>(null);
-
-  const [realBalance, setRealbalance] = useState<number | null>(null);
-
 
   const columns: ProColumns[] = [
     {
@@ -78,10 +72,6 @@ const Users = () => {
             <label>Invite Code:</label>
             <div>{row?.inviteCode || "-"}</div>
           </div>
-          <div className='flex gap-2'>
-            <label>Số người mời:</label>
-            <div>{row?.inviteUser?.length || "-"}</div>
-          </div>
         </div>
       )
     },
@@ -97,24 +87,12 @@ const Users = () => {
             <div>{row?.phone}</div>
           </div>
           <div className='flex gap-2'>
-            <label>VIP:</label>
-            <div>{row?.vip}</div>
-          </div>
-          <div className='flex gap-2'>
             <label>Mật khẩu:</label>
             <div>{row?.password}</div>
           </div>
           <div className='flex gap-2'>
             <label>Ngày tạo:</label>
             <div>{new Date(row?.createdAt)?.toLocaleString()}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>IP:</label>
-            <div className='font-[500]'>{row?.registerIp}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>DeviceId:</label>
-            <div className='font-[500]'>{row?.uuid}</div>
           </div>
         </div>
       )
@@ -128,99 +106,58 @@ const Users = () => {
         <div className='flex flex-col gap-1'>
           <div className='flex gap-2'>
             <label>Số dư:</label>
-            <div style={{
-              color: row?.realBalance >= 5 ? "red" : "#000",
-              fontWeight: 600
-            }}>{row?.realBalance?.toLocaleString()}</div>
+            <div>{row?.realBalance}</div>
           </div>
           <div className='flex gap-2'>
             <label>Mật khẩu ví:</label>
             <div>{row?.payment_password}</div>
           </div>
-          <div className='flex gap-2'>
-            <label>Số Vòng Quay:</label>
-            <div>{row?.drawNum}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số Ngày Checkin:</label>
-            <div>{row?.checkInToday}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số Ticker:</label>
-            <div>{row?.duckSticker}</div>
-          </div>
-          <div className='flex gap-2'>
-            <label>Số Lần tìm kho báu:</label>
-            <div>{row?.mineNum}</div>
-          </div>
         </div>
       )
     },
-    // {
-    //   title: 'Tài khoản',
-    //   dataIndex: 'bankList',
-    //   align: 'center',
-    //   sorter: false,
-    //   render: (bankList: any, row: any) => {
-    //     if (bankList?.length > 0) {
-    //       const mainBank = bankList[0]
-    //       return (
-    //         <div className='flex flex-col gap-1'>
-    //           <div className='flex gap-2'>
-    //             <label>Tên TK</label>
-    //             <div style={{
-    //               color: row?.user?.realBalance >= 5 ? "red" : "#000",
-    //               fontWeight: 600
-    //             }}>{mainBank?.holderName}</div>
-    //           </div>
-    //           <div className='flex gap-2'>
-    //             <label>Số TK</label>
-    //             <div style={{
-    //               color: row?.user?.realBalance >= 5 ? "red" : "#000",
-    //               fontWeight: 600
-    //             }}>{mainBank?.numberBank}</div>
-    //           </div>
-    //           <div className='flex gap-2'>
-    //             <label>Tên Ngân Hàng</label>
-    //             <div style={{
-    //               color: row?.user?.realBalance >= 5 ? "red" : "#000",
-    //               fontWeight: 600
-    //             }}>{mainBank?.nameBank}</div>
-    //           </div>
 
-
-    //         </div>
-    //       )
-    //     }
-
-    //   }
-
-
-
-    // },
     {
       title: 'Action',
       align: 'center',
       key: 'option',
       fixed: 'right',
-      render: (_, row: any) => {
-        return (
-          <div className='flex justify-center'>
+      render: (_, row: User) => [
+        <TableDropdown
+          key="actionGroup"
+          onSelect={(key) => handleActionOnSelect(key, row)}
+          menus={[
             {
-              row?.roles[0]?.code === 'USER' &&
-              <Link to={`/user-detail/${row?._id}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 cursor-pointer">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-              </Link>
-            }
-
-
-          </div>
-
-
-        )
-      }
+              key: "profile",
+              name: (
+                <Space>
+                  <UserOutlined />
+                  Thay đổi 
+                </Space>
+              ),
+            },
+            {
+              key: "deposit",
+              name: (
+                <Space>
+                  <WalletOutlined />
+                  Ví
+                </Space>
+              ),
+            },
+            {
+              key: "delete",
+              name: (
+                <Space>
+                  <DeleteOutlined />
+                  Delete
+                </Space>
+              ),
+            },
+          ]}
+        >
+          <Icon component={CiCircleMore} className="text-primary text-xl" />
+        </TableDropdown>,
+      ],
     },
   ];
 
@@ -229,8 +166,6 @@ const Users = () => {
       showDeleteConfirmation(user);
     }
   };
-
-
 
   const showDeleteConfirmation = (user: User) => {
     modal.confirm({
@@ -270,25 +205,9 @@ const Users = () => {
       },
     });
   };
-  const handleSearchVip = (value: string) => {
-    console.log(`selected ${value}`);
-  };
 
-
-  const handleMenuClick = (e: any) => {
-    // Cập nhật giá trị vipSelection khi người dùng chọn 1 menu item
-    setVipSelection(e.key);
-    actionRef?.current?.reload()
-  };
-
-  const handleMenuClickSelectRelbalnce = (e: any) => {
-    // Cập nhật giá trị vipSelection khi người dùng chọn 1 menu item
-    setRealbalance(e.key);
-    actionRef?.current?.reload()
-  };
   return (
     <BasePageContainer breadcrumb={breadcrumb}>
-
       <ProTable
         columns={columns}
         cardBordered={false}
@@ -299,7 +218,6 @@ const Users = () => {
             title: 'Mocked data',
           },
           title: <FiUsers className="opacity-60" />,
-
         }}
         bordered={true}
         showSorterTooltip={false}
@@ -318,8 +236,6 @@ const Users = () => {
                 page: params.current,
                 per_page: params.pageSize,
                 search: params.keyword,
-                vip: vipSelection,
-                realBalance
               },
             })
             .then((response) => {
@@ -342,42 +258,6 @@ const Users = () => {
         }}
         dateFormatter="string"
         search={false}
-        toolBarRender={() => [
-          <Dropdown
-            key="menu"
-            overlay={
-              <Menu onClick={handleMenuClick}>
-                <Menu.Item key="1">Vip1</Menu.Item>
-                <Menu.Item key="2">Vip2</Menu.Item>
-                <Menu.Item key="3">Vip3</Menu.Item>
-                <Menu.Item key="4">Vip4</Menu.Item>
-                <Menu.Item key="6">Vip6</Menu.Item>
-                <Menu.Item key="7">Vip7</Menu.Item>
-                <Menu.Item key="8">Vip8</Menu.Item>
-              </Menu>
-            }
-          >
-            <Button>
-              <EllipsisOutlined />
-            </Button>
-          </Dropdown>,
-          <Dropdown
-            key="menu"
-            overlay={
-              <Menu onClick={handleMenuClickSelectRelbalnce}>
-                <Menu.Item key="5">{"Số dư >= 5"}</Menu.Item>
-                <Menu.Item key="10">{"Số dư >= 10"}</Menu.Item>
-                <Menu.Item key="15">{"Số dư >= 15"}</Menu.Item>
-              </Menu>
-            }
-          >
-            <Button>
-              <MoneyCollectFilled />
-            </Button>
-          </Dropdown>,
-        ]
-
-        }
         rowKey="_id"
         options={{
           search: {
@@ -385,7 +265,6 @@ const Users = () => {
             width: 200,
             allowClear: true,
           },
-
         }}
       />
       {modalContextHolder}

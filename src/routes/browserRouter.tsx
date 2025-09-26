@@ -10,9 +10,6 @@ import ProgressBar from '../components/loader/progressBar';
 import RequireAuth from './requireAuth';
 import Login from '../components/auth/Login';
 import About from '../components/demo-pages/about';
-import Setting from '../components/demo-pages/about';
-import UserDetail from '../components/users/user-detail';
-import Codes from '../components/codes';
 
 const errorElement = <ErrorPage />;
 const fallbackElement = <ProgressBar />;
@@ -77,10 +74,6 @@ export const browserRouter = createBrowserRouter([
         element: <Users />,
       },
       {
-        path: webRoutes.userDetail,
-        element: <UserDetail />,
-      },
-      {
         path: webRoutes.deposit,
         element: <Deposits />,
       },
@@ -93,20 +86,12 @@ export const browserRouter = createBrowserRouter([
         element: <HistoryUser />,
       },
       {
-        path: webRoutes.setting,
-        element: <Setting />,
-      },
-      {
         path: webRoutes.about,
         element: <About />,
       },
       {
         path: webRoutes.tickets,
         element: <TicketHistory />,
-      },
-      {
-        path: webRoutes.codes,
-        element: <Codes />,
       },
     ],
   },
