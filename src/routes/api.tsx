@@ -17,5 +17,8 @@ export const apiRoutes = {
   users: `${API_URL}/admin/users`,
   reviews: `${API_URL}/unknown`,
   codes: `${API_URL}/admin/codes`,
-  createCode: `${API_URL}/admin/code`
+  createCode: `${API_URL}/admin/code`,
+  packs: `${API_URL}/admin/invest-packs`,
+  updatePack: (id: string) => `${API_URL}/admin/invest-pack/${id}`,
+  createPack: `${API_URL}/admin/invest-pack`,
 };

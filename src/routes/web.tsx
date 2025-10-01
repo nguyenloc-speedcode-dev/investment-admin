@@ -7,6 +7,7 @@ export const webRoutes = {
   login: '/login',
   logout: '/logout',
   dashboard: '/dashboard',
+  pack: '/pack',
   users: '/users',
   setting: '/setting',
   codes: '/codes',
